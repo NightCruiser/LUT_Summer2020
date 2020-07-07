@@ -53,3 +53,9 @@ int main(int argc, char *argv[]) {
         } while (valinta != 0);
         return 0;
 }
+
+node_t *addnode(node_t *pPrev) {
+        node_t *pNew = NULL;
+
+        return pNew;
+}
