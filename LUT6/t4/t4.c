@@ -1,5 +1,5 @@
-include <stdio.h>
-include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 struct node {
         int data;
@@ -26,20 +26,28 @@ int main(int argc, char *argv[]) {
                 }
                 switch (valinta) {
                         case 1 :
+                                printf("In Develompent\n");
                                 break;
                         case 2 :
+                                printf("In Develompent\n");
                                 break;
                         case 3 :
+                                printf("In Develompent\n");
                                 break;
                         case 4 :
+                                printf("In Develompent\n");
                                 break;
                         case 5 :
+                                printf("In Develompent\n");
                                 break;
                         case 6 :
+                                printf("In Develompent\n");
                                 break;
                         case 0 :
+                                printf("In Develompent\n");
                                 break;
                         default:
+                                printf("Tuntematon valinta.\n");
 
                 }
         } while (valinta != 0);

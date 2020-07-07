@@ -19,9 +19,9 @@ int main(int argc, char *argv[]) {
 
         do {
                 printf("1) Tulosta listan alkiot\n"
-                        "2) Muuta listan pituutta\n"
-                        "0) Lopeta\n"
-                        "Anna valintasi: ");
+                       "2) Muuta listan pituutta\n"
+                       "0) Lopeta\n"
+                       "Anna valintasi: ");
                 scanf(" %d", &valinta);
                 while(1) {
                         if (getchar() == '\n') break;
