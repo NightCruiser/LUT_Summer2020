@@ -10,6 +10,11 @@ typedef struct node node_t;
 
 int main(int argc, char *argv[]) {
         int valinta = 0;
+        size_t listLen = 0;
+        node_t *pStart = NULL;
+        node_t *pCur = NULL;
+
+
         printf("Tämä ohjelma hallitsee listaa ja sen alkioita.\n");
         do {
                 printf("1) Luo lista\n"
@@ -56,6 +61,21 @@ int main(int argc, char *argv[]) {
 
 node_t *addnode(node_t *pPrev) {
         node_t *pNew = NULL;
-
+        if (!(pNew = (node_t *)malloc(sizeof(node_t)))) {
+                perror("Muistin varaus epäonnistui\n");
+                exit(-1);
+        }
+        if (pPrev) {
+                pPrev->pNext = pNew;
+        }
         return pNew;
+}
+
+void vapaa(node_t *pAlku) {
+        node_t *ptr = NULL;
+        while (pAlku != NULL) {
+                ptr = pAlku->pNext;
+                free(pAlku);
+                pAlku = ptr;
+        }
 }
