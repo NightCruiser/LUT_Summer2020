@@ -8,9 +8,16 @@ struct node {
 
 typedef struct node node_t;
 
+node_t *addnode(node_t *pPrev);
+node_t *vapaa(node_t *pAlku);
+void tulosta(node_t *pAlku);
+node_t *luolista(node_t *pAlku, int len);
+
 int main(int argc, char *argv[]) {
         int valinta = 0;
-        size_t listLen = 0;
+        int listLen = 0;
+        int prevLen = 0;
+        int orderNum = 0;
         node_t *pStart = NULL;
         node_t *pCur = NULL;
 
@@ -30,29 +37,50 @@ int main(int argc, char *argv[]) {
                         if (getchar() == '\n') break;
                 }
                 switch (valinta) {
-                        case 1 :
-                                printf("In Develompent\n");
+                        case 1 : //valmis
+                                printf("Anna listan pituus: ");
+                                scanf(" %d", &listLen);
+                                while (1) {
+                                        if (getchar() == '\n') break;
+                                }
+                                if (listLen < 0) {
+                                        printf("Listan pituus ei voi olla "
+                                               "negatiivinen.\n");
+                                        listLen = prevLen;
+                                        break;
+                                }
+                                if (pStart) pStart = vapaa(pStart);
+                                pStart = addnode(pStart);
+                                pCur = luolista(pStart, listLen);
+                                tulosta(pStart);
                                 break;
-                        case 2 :
-                                printf("In Develompent\n");
+                        case 2 : //valmis
+                                if (listLen == 0) break;
+                                pCur = addnode(pCur);
+                                pCur->data = listLen;
+                                listLen++;
+                                tulosta(pStart);
                                 break;
                         case 3 :
-                                printf("In Develompent\n");
+                                printf("Monenneksi solmuksi alkio lisätään: ");
+                                scanf(" %d", &orderNum);
                                 break;
-                        case 4 :
-                                printf("In Develompent\n");
+                        case 4 : //valmis
+                                pStart = vapaa(pStart);
+                                listLen = 0;
                                 break;
                         case 5 :
-                                printf("In Develompent\n");
+                                printf("Monennesta solmusta alkio poistetaan: ");
                                 break;
-                        case 6 :
-                                printf("In Develompent\n");
+                        case 6 : //valmis
+                                tulosta(pStart);
                                 break;
-                        case 0 :
-                                printf("In Develompent\n");
+                        case 0 : //valmis
+                                printf("Kiitos ohjelman käytöstä.\n");
+                                pStart = vapaa(pStart);
                                 break;
-                        default:
-                                printf("Tuntematon valinta.\n");
+                        default: //valmis
+                                printf("Tuntematon valinta, yritä uudestaan.\n");
 
                 }
         } while (valinta != 0);
@@ -68,14 +96,39 @@ node_t *addnode(node_t *pPrev) {
         if (pPrev) {
                 pPrev->pNext = pNew;
         }
+        pNew->pNext = NULL;
         return pNew;
 }
 
-void vapaa(node_t *pAlku) {
+node_t *vapaa(node_t *pAlku) {
         node_t *ptr = NULL;
-        while (pAlku != NULL) {
+        while (pAlku) {
                 ptr = pAlku->pNext;
                 free(pAlku);
                 pAlku = ptr;
         }
+        return pAlku;
+}
+
+void tulosta(node_t *pAlku) {
+        if (!pAlku) printf("\n");
+        while (pAlku) {
+                printf("%d ", pAlku->data);
+                pAlku = pAlku->pNext;
+        }
+        printf("\n");
+}
+
+node_t *luolista(node_t *pAlku, int len) {
+        node_t *pCurrent = NULL;
+        size_t i = 0;
+        pAlku->data = i;
+        i++;
+        while (i < len) {
+                pCurrent = addnode(pAlku);
+                pCurrent->data = i;
+                i++;
+                pAlku = pCurrent;
+        }
+        return pCurrent;
 }
