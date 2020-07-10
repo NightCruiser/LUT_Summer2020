@@ -11,13 +11,14 @@ typedef struct node node_t;
 node_t *addnode(node_t *pPrev);
 node_t *vapaa(node_t *pAlku);
 void tulosta(node_t *pAlku);
-node_t *luolista(node_t *pAlku, int len);
+node_t *luolista(node_t *pAlku, int len, int *i);
 
 int main(int argc, char *argv[]) {
         int valinta = 0;
         int listLen = 0;
         int prevLen = 0;
         int orderNum = 0;
+        int numCounter = 0;
         node_t *pStart = NULL;
         node_t *pCur = NULL;
 
@@ -51,17 +52,19 @@ int main(int argc, char *argv[]) {
                                 }
                                 if (pStart) pStart = vapaa(pStart);
                                 pStart = addnode(pStart);
-                                pCur = luolista(pStart, listLen);
+                                pCur = luolista(pStart, listLen, &numCounter);
                                 tulosta(pStart);
+                                prevLen = listLen;
                                 break;
                         case 2 : //valmis
                                 if (listLen == 0) break;
                                 pCur = addnode(pCur);
-                                pCur->data = listLen;
+                                pCur->data = numCounter + 1;
                                 listLen++;
+                                numCounter++;
                                 tulosta(pStart);
                                 break;
-                        case 3 :
+                        case 3 : //in progress
                                 printf("Monenneksi solmuksi alkio lisätään: ");
                                 scanf(" %d", &orderNum);
                                 break;
@@ -69,8 +72,14 @@ int main(int argc, char *argv[]) {
                                 pStart = vapaa(pStart);
                                 listLen = 0;
                                 break;
-                        case 5 :
-                                printf("Monennesta solmusta alkio poistetaan: ");
+                        case 5 : //in progress
+                                printf("Monennesta solmusta "
+                                       "alkio poistetaan: ");
+                                scanf(" %d", &orderNum);
+                                while (1) {
+                                        if (getchar() == '\n') break;
+                                }
+
                                 break;
                         case 6 : //valmis
                                 tulosta(pStart);
@@ -80,7 +89,8 @@ int main(int argc, char *argv[]) {
                                 pStart = vapaa(pStart);
                                 break;
                         default: //valmis
-                                printf("Tuntematon valinta, yritä uudestaan.\n");
+                                printf("Tuntematon valinta, "
+                                       "yritä uudestaan.\n");
 
                 }
         } while (valinta != 0);
@@ -111,7 +121,6 @@ node_t *vapaa(node_t *pAlku) {
 }
 
 void tulosta(node_t *pAlku) {
-        if (!pAlku) printf("\n");
         while (pAlku) {
                 printf("%d ", pAlku->data);
                 pAlku = pAlku->pNext;
@@ -119,15 +128,16 @@ void tulosta(node_t *pAlku) {
         printf("\n");
 }
 
-node_t *luolista(node_t *pAlku, int len) {
+node_t *luolista(node_t *pAlku, int len, int *i) {
         node_t *pCurrent = NULL;
-        size_t i = 0;
-        pAlku->data = i;
-        i++;
-        while (i < len) {
+        int localCounter = 1;
+        pAlku->data = *i + 1;
+        (*i)++;
+        while (localCounter < len) {
                 pCurrent = addnode(pAlku);
-                pCurrent->data = i;
-                i++;
+                pCurrent->data = *i + 1;
+                (*i)++;
+                localCounter++;
                 pAlku = pCurrent;
         }
         return pCurrent;
