@@ -12,10 +12,9 @@ _Bool checkOrderNum(int *len, int *order);
 void clearStdin();
 node_t *addnode(node_t *pPrev);
 node_t *vapaa(node_t *pAlku);
-node_t *luolista(node_t *pAlku, int len, int *numCounter);
 void tulosta(node_t *pAlku);
-void addRemoveInPosition(node_t *pStart, int orderNum, int *numCounter,
-                         char c);
+node_t *luolista(node_t *pAlku, int len, int *i);
+void addInPosition(node_t *pStart, int orderNum, int *numCounter);
 
 int main(int argc, char *argv[]) {
         int valinta = 0;
@@ -69,8 +68,7 @@ int main(int argc, char *argv[]) {
                                 scanf(" %d", &orderNum);
                                 clearStdin();
                                 if (checkOrderNum(&listLen, &orderNum)) break;
-                                addRemoveInPosition(pStart, orderNum,
-                                                    &numCounter, '+');
+                                addInPosition(pStart, orderNum, &numCounter);
                                 listLen++;
                                 break;
                         case 4 : //valmis
@@ -83,9 +81,7 @@ int main(int argc, char *argv[]) {
                                 scanf(" %d", &orderNum);
                                 clearStdin();
                                 if (checkOrderNum(&listLen, &orderNum)) break;
-                                addRemoveInPosition(pStart, orderNum,
-                                                    &numCounter, '-');
-                                listLen--;
+
                                 break;
                         case 6 : //valmis
                                 tulosta(pStart);
@@ -133,41 +129,35 @@ void tulosta(node_t *pAlku) {
         printf("\n");
 }
 
-node_t *luolista(node_t *pAlku, int len, int *numCounter) {
+node_t *luolista(node_t *pAlku, int len, int *i) {
         node_t *pCurrent = NULL;
-        int i = 1;
+        int localCounter = 1;
         pAlku->data = *i + 1;
-        (*numCounter)++;
-        while (i < len) {
+        (*i)++;
+        while (localCounter < len) {
                 pCurrent = addnode(pAlku);
-                pCurrent->data = *numCounter + 1;
-                (*numCounter)++;
-                i++;
+                pCurrent->data = *i + 1;
+                (*i)++;
+                localCounter++;
                 pAlku = pCurrent;
         }
         return pCurrent;
 }
 
-void addRemoveInPosition(node_t *pStart, int orderNum, int *numCounter,
-                         char c) {
+void addInPosition(node_t *pStart, int orderNum, int *numCounter) {
         int i = 0;
         node_t *ptrNext = NULL;
-        node_t *ptr = NULL;
-                while (i <  orderNum - 2) {
-                        pStart = pStart->pNext;
-                        i++;
-                }
-                ptrNext = pStart->pNext;
-                if (c == '+') {
-                        pStart = addnode(pStart);
-                        pStart->pNext = ptrNext;
-                        (*numCounter)++;
-                        pStart->data = *numCounter;
-                } else if (c == '-') {
-                        ptr = ptrNext->pNext;
-                        free(ptrNext);
-                        pStart->pNext = ptr;
+        printf("addinposition called\n");
+        while (i <  orderNum - 2) {
+                pStart = pStart->pNext;
+                printf("while data : %d\n", pStart->data);
+                i++;
         }
+        ptrNext = pStart->pNext;
+        pStart = addnode(pStart);
+        pStart->pNext = ptrNext;
+        (*numCounter)++;
+        pStart->data = *numCounter;
 }
 
 void clearStdin() {
@@ -180,10 +170,6 @@ _Bool checkOrderNum(int *len, int *order) {
         if (*order < 0) {
                 printf("Järjestys ei voi olla "
                        "negatiivinen.\n" );
-                return 1;
-        }
-        if (*order == 0) {
-                printf("Järjestysnumeron pitää olla suurempi kuin nolla.\n" );
                 return 1;
         }
         if (*order > *len) {
