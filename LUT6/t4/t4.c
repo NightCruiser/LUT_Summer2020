@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
         node_t *pStart = NULL;
         node_t *pCur = NULL;
 
-
         printf("Tämä ohjelma hallitsee listaa ja sen alkioita.\n");
         do {
                 printf("1) Luo lista\n"
@@ -40,7 +39,7 @@ int main(int argc, char *argv[]) {
                 scanf(" %d", &valinta);
                 clearStdin();
                 switch (valinta) {
-                        case 1 : //valmis
+                        case 1 : //Luo lista / Create List
                                 printf("Anna listan pituus: ");
                                 scanf(" %d", &listLen);
                                 clearStdin();
@@ -56,7 +55,7 @@ int main(int argc, char *argv[]) {
                                 tulosta(pStart);
                                 prevLen = listLen;
                                 break;
-                        case 2 : //valmis
+                        case 2 : //Lisää alkio listan loppuun / Add to end
                                 if (listLen == 0) break;
                                 pCur = addnode(pCur);
                                 pCur->data = numCounter + 1;
@@ -64,7 +63,7 @@ int main(int argc, char *argv[]) {
                                 numCounter++;
                                 tulosta(pStart);
                                 break;
-                        case 3 : //valmis
+                        case 3 : //Lisää alkio listan keskelle / Add in position
                                 printf("Monenneksi solmuksi alkio lisätään: ");
                                 scanf(" %d", &orderNum);
                                 clearStdin();
@@ -73,11 +72,11 @@ int main(int argc, char *argv[]) {
                                                     &numCounter, '+');
                                 listLen++;
                                 break;
-                        case 4 : //valmis
+                        case 4 : //Tyhjennä lista / Clear list
                                 pStart = vapaa(pStart);
                                 listLen = 0;
                                 break;
-                        case 5 : //in progress
+                        case 5 : //Poista alkio listasta / remove from position
                                 printf("Monennesta solmusta "
                                        "alkio poistetaan: ");
                                 scanf(" %d", &orderNum);
@@ -87,14 +86,14 @@ int main(int argc, char *argv[]) {
                                                     &numCounter, '-');
                                 listLen--;
                                 break;
-                        case 6 : //valmis
+                        case 6 : //Tulosta lista / print list
                                 tulosta(pStart);
                                 break;
-                        case 0 : //valmis
+                        case 0 : //Lopeta / Close
                                 printf("Kiitos ohjelman käytöstä.\n");
                                 pStart = vapaa(pStart);
                                 break;
-                        default: //valmis
+                        default:
                                 printf("Tuntematon valinta, "
                                        "yritä uudestaan.\n");
                 }
@@ -136,7 +135,7 @@ void tulosta(node_t *pAlku) {
 node_t *luolista(node_t *pAlku, int len, int *numCounter) {
         node_t *pCurrent = NULL;
         int i = 1;
-        pAlku->data = *i + 1;
+        pAlku->data = (*numCounter) + 1;
         (*numCounter)++;
         while (i < len) {
                 pCurrent = addnode(pAlku);
