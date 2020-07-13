@@ -2,13 +2,13 @@
 #include "lista.h"
 
 int main(int argc, char *argv[]) {
+        node_t *pStart = NULL;
+        node_t *pCur = NULL;
         int valinta = 0;
         int listLen = 0;
         int prevLen = 0;
-        int orderNum = 0;
         int numCounter = 0;
-        node_t *pStart = NULL;
-        node_t *pCur = NULL;
+        int orderNum = 0;
 
         printf("Tämä ohjelma hallitsee listaa ja sen alkioita.\n");
         do {
@@ -34,35 +34,33 @@ int main(int argc, char *argv[]) {
                                         break;
                                 }
                                 if (pStart) pStart = vapaa(pStart);
-                                pStart = addnode(pStart);
-                                pCur = luolista(pStart, listLen, &numCounter);
+                                pStart = luoLista(&pCur, listLen, &numCounter);
                                 tulosta(pStart);
                                 prevLen = listLen;
                                 break;
                         case 2 : //Lisää alkio listan loppuun
                                 if (listLen == 0) break;
-                                pCur = addnode(pCur);
-                                pCur->data = numCounter + 1;
-                                listLen++;
-                                numCounter++;
+                                pCur = addloppuun(pCur, &listLen, &numCounter);
                                 tulosta(pStart);
                                 break;
                         case 3 : //Lisää alkio listan keskelle
                                 printf("Monenneksi solmuksi alkio lisätään: ");
                                 scanf(" %d", &orderNum);
                                 clearStdin();
+                                if (orderNum - listLen == 1) {
+                                        pCur = addloppuun(pCur, &listLen,
+                                                                 &numCounter);
+                                        tulosta(pStart);
+                                        break;
+                                }
                                 if (checkOrderNum(&listLen, &orderNum)) break;
-                                if (orderNum - listLen == 1) 
                                 if (orderNum == 1) {
-                                        node_t *tmp = pStart;
-                                        pStart = NULL;
-                                        pStart = addnode(pStart);
-                                        pStart->pNext = tmp;
-                                        pStart->data = ++numCounter;
-                                        numCounter++;
+                                        pStart = addInPos(pStart, orderNum,
+                                                          &numCounter);
+
                                 } else {
-                                        addRemoveInPosition(pStart, orderNum,
-                                                            &numCounter, '+');
+                                        addInPos(pStart, orderNum,
+                                                 &numCounter);
                                 }
                                 listLen++;
                                 tulosta(pStart);
@@ -76,18 +74,13 @@ int main(int argc, char *argv[]) {
                                        "alkio poistetaan: ");
                                 scanf(" %d", &orderNum);
                                 clearStdin();
-                                if (checkOrderNum(&listLen, &orderNum)) break;
                                 if (orderNum == 1) {
-                                        node_t *tmp = pStart;
-                                        pStart = addnode(pStart);
-                                        pStart->pNext = tmp;
-                                        pStart->data = numCounter;
-                                        numCounter++;
-                                } else {
-                                        addRemoveInPosition(pStart, orderNum,
-                                                            &numCounter, '-');
+                                        pStart = rmFromPos(pStart, orderNum,
+                                                           &listLen);
+                                        break;
                                 }
-                                listLen--;
+                                if (checkOrderNum(&listLen, &orderNum)) break;
+                                rmFromPos(pStart, orderNum, &listLen);
                                 break;
                         case 6 : //Tulosta lista
                                 tulosta(pStart);
