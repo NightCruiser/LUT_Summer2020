@@ -72,6 +72,7 @@ int main(int argc, char *argv[]) {
                                         pStart = addnode(pStart);
                                         pStart->pNext = tmp;
                                         pStart->data = numCounter;
+                                        numCounter++;
                                 } else {
                                         addRemoveInPosition(pStart, orderNum,
                                                             &numCounter, '-');
