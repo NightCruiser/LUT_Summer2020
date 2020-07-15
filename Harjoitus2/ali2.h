@@ -12,6 +12,9 @@
 
 void analyse(s_temp_node *);
 void clearStdin();
+s_tulokset *createMonthNode();
+void createMonthList(char *, s_temp_node *);
+void parseMonthData(s_temp_node **, s_tulokset **, int, char *);
 s_temp_node *createNode();
 void initNode(char *, s_temp_node *);
 void linkNodes(s_temp_node *, s_temp_node *);
