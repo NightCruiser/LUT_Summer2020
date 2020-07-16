@@ -108,7 +108,7 @@ void *newNode(size_t size)
                 perror("Muistinvaraus epäonnistui");
                 exit(-1);
         }
-        *(char **)pNew = NULL;
+        *(void **)pNew = NULL;
         return pNew;
 }
 /******************************************************************************/
@@ -123,12 +123,12 @@ void createMonthList(char *fName, s_temp_node *pData)
         int i = 0;
         while (i < MONTHS){
                 if (pStart == NULL) {
-                        pCur = pPrev = pStart = (s_tulokset *)createMonthNode(sizeof(s_tulokset));
+                        pCur = pPrev = pStart = (s_tulokset *)newNode(sizeof(s_tulokset));
                         printf("BeforeParsing Month %s\n", pStart->month);
                         parseMonthData(&pData, &pStart, i, fName);
                         i++;
                 } else {
-                        pCur = (s_tulokset *)createMonthNode(sizeof(s_tulokset));
+                        pCur = (s_tulokset *)newNode(sizeof(s_tulokset));
                         parseMonthData(&pData, &pCur, i, fName);
                         pPrev->pNext = pCur;
                         pPrev = pCur;
