@@ -12,14 +12,15 @@
 
 void analyse(s_temp_node *);
 void clearStdin();
+void createList(void **pStart, void **pCur, void **pPrev, size_t size);
 //s_tulokset *createMonthNode();
 void *newNode(size_t size);
 void createMonthList(char *, s_temp_node *);
 void parseMonthData(s_temp_node **, s_tulokset **, int, char *);
 s_temp_node *createNode();
 void initNode(char *, s_temp_node *);
-void linkNodes(s_temp_node *, s_temp_node *);
-void vapaa(s_temp_node *);
+void linkNodes(void *pPrev, void *pNew);
+void vapaa(void *);
 #endif /*ALI2_H*/
 
 /******************************************************************************/

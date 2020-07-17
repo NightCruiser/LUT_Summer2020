@@ -112,9 +112,81 @@ void *newNode(size_t size)
         return pNew;
 }
 /******************************************************************************/
-
+void createList(void *pStart, size_t size)
+{
+        void *pCur = NULL;
+        void *pPrev = NULL;
+        printf("create called\n");
+        if (*(void **)pStart == NULL) {
+                //pStart = createNode();
+                (*(void **)pStart = newNode(size);
+                pCur = pPrev = (*(void **)pStartpStart;
+                //return pStart;
+        } else {
+                printf("else called\n");
+                pCur = newNode(size);
+                printf("else called 1\n");
+                linkNodes(*pPrev, *pCur);
+                printf("else called 2\n");
+                *pPrev = *pCur;
+                printf("else called 3\n");
+                //return *pCur;
+        }
+}
 /******************************************************************************/
 
+
+/******************************************************************************/
+/**
+ *void linkNodes(s_temp_node *, s_temp_node *); - declaration.
+ *This function will link two nodes
+ *Will recieve as a parameters two pointers.
+ *First pointer to the previous node
+ *Second pointer to the node that we will link with previous.
+ *Function can link a new node in any position in already created
+ *linked list. In this case new node will be added between the node
+ *pointed as previous and the node previous pointing to.
+ *!!!except the first position!!!.
+ *
+ */
+void linkNodes(void *pPrev, void *pNew)
+{
+        if (*(void **)pPrev == NULL) {
+                *(void **)pPrev = pNew;
+                return;
+        }
+        /*we will not use this feature but this can be useful
+         *when adding node in a special position, except the first position.
+         *Added this just because of thinking about LUT7-2 exercise, that was
+         *done not in best way.
+         */
+        if (*(void **)pPrev) {
+                /*initialization inside the block is allowed by standart
+                 *it must be right after the curly bracket.
+                 *Useful in case when we need this variable just inside
+                 *this block.
+                 */
+                void *tmp = NULL;
+                tmp = *(void **)pPrev;
+                *(void **)pPrev = pNew;
+                *(void **)pNew = tmp;
+        }
+}
+/******************************************************************************/
+/**
+ *void *vapaa(void *); - declaration
+ *This function clears the linked list.
+ *Recieves a pointer to first node as a parameter
+ */
+void vapaa(void *pStart) {
+        void *ptr = NULL;
+        while (pStart) {
+                ptr = *(void **)pStart;
+                free(pStart);
+                pStart = ptr;
+        }
+}
+/******************************************************************************/
 void createMonthList(char *fName, s_temp_node *pData)
 {
         s_tulokset *pStart = NULL;
@@ -123,7 +195,8 @@ void createMonthList(char *fName, s_temp_node *pData)
         int i = 0;
         while (i < MONTHS){
                 if (pStart == NULL) {
-                        pCur = pPrev = pStart = (s_tulokset *)newNode(sizeof(s_tulokset));
+                        pCur = pPrev = pStart = (s_tulokset *)newNode
+                        (sizeof(s_tulokset));
                         printf("BeforeParsing Month %s\n", pStart->month);
                         parseMonthData(&pData, &pStart, i, fName);
                         i++;
@@ -139,85 +212,35 @@ void createMonthList(char *fName, s_temp_node *pData)
 }
 /******************************************************************************/
 void parseMonthData(s_temp_node **pData, s_tulokset **pNode, int month,
-                    char *fName)
-{
-        int tmpSumma = 0;
-        int values = 0;
-        int min = 0;
-        int max = 0;
-        char kuukausi[12][7] = {"Tammi", "Helmi", "Maalis", "Huhti", "Touko",
-                                 "Kesa", "Heina", "Elo", "Syys", "Loka",
-                                 "Marras", "Joulu"};
+        char *fName)
+        {
+                int tmpSumma = 0;
+                int values = 0;
+                int min = 0;
+                int max = 0;
+                char kuukausi[12][7] = {"Tammi", "Helmi", "Maalis", "Huhti", "Touko",
+                "Kesa", "Heina", "Elo", "Syys", "Loka",
+                "Marras", "Joulu"};
 
-        printf("parse called\n");
-        printf("%s\n", kuukausi[month]);
-        strcpy((*pNode)->month, kuukausi[month]);
-        printf("%s\n", (*pNode)->month);
-        //sscanf((*pNode)->kaupunki, "%s", fName);
-        //(*pNode)->year = (*pData)->year;
-        while ((*pData)->month == month + 1) {
-                tmpSumma += (*pData)->temp;
-                if (((*pData)->temp) > max) max = (*pData)->temp;
-                if (((*pData)->temp) < min) min = (*pData)->temp;
-                values++;
-                (*pData) = (*pData)->pNext;
-        }
+                printf("parse called\n");
+                printf("%s\n", kuukausi[month]);
+                strcpy((*pNode)->month, kuukausi[month]);
+                printf("%s\n", (*pNode)->month);
+                //sscanf((*pNode)->kaupunki, "%s", fName);
+                //(*pNode)->year = (*pData)->year;
+                while ((*pData)->month == month + 1) {
+                        tmpSumma += (*pData)->temp;
+                        if (((*pData)->temp) > max) max = (*pData)->temp;
+                        if (((*pData)->temp) < min) min = (*pData)->temp;
+                        values++;
+                        (*pData) = (*pData)->pNext;
+                }
 
-        (*pNode)->avgTemp = tmpSumma / values;
-        (*pNode)->minTemp = min;
-        (*pNode)->maxTemp = max;
-        printf("%d, %d, %d\n", (*pNode)->avgTemp, (*pNode)->minTemp,
-               (*pNode)->maxTemp);
-}
-/******************************************************************************/
-/**
- *void linkNodes(s_temp_node *, s_temp_node *); - declaration.
- *This function will link two nodes
- *Will recieve as a parameters two pointers.
- *First pointer to the previous node
- *Second pointer to the node that we will link with previous.
- *Function can link a new node in any position in already created
- *linked list. In this case new node will be added between the node
- *pointed as previous and the node previous pointing to.
- *!!!except the first position!!!.
- *
- */
-void linkNodes(s_temp_node *pPrev, s_temp_node *pNew)
-{
-        if (pPrev->pNext == NULL) {
-                pPrev->pNext = pNew;
-                return;
+                (*pNode)->avgTemp = tmpSumma / values;
+                (*pNode)->minTemp = min;
+                (*pNode)->maxTemp = max;
+                printf("%d, %d, %d\n", (*pNode)->avgTemp, (*pNode)->minTemp,
+                (*pNode)->maxTemp);
         }
-        /*we will not use this feature but this can be useful
-         *when adding node in a special position, except the first position.
-         *Added this just because of thinking about LUT7-2 exercise, that was
-         *done not in best way.
-         */
-        if (pPrev->pNext) {
-                /*initialization inside the block is allowed by standart
-                 *it must be right after the curly bracket.
-                 *Useful in case when we need this variable just inside
-                 *this block.
-                 */
-                s_temp_node *tmp = NULL;
-                tmp = pPrev->pNext;
-                pPrev->pNext = pNew;
-                pNew->pNext = tmp;
-        }
-}
-/******************************************************************************/
-/**
- *s_temp_node *vapaa(s_temp_node *); - declaration
- *This function clears the linked list.
- *Recieves a pointer to first node as a parameter
- */
-void vapaa(s_temp_node *pStart) {
-        s_temp_node *ptr = NULL;
-        while (pStart) {
-                ptr = pStart->pNext;
-                free(pStart);
-                pStart = ptr;
-        }
-}
 /******************************************************************************/
 /* eof */

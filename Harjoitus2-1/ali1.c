@@ -44,8 +44,11 @@ s_temp_node *fileToList(const char *name)
         /*This loop reads the file string by string,
          *parse the string and creates/inits the linked list
          */
+        pStart = createList(pStart, sizeof(s_temp_node));
+        initNode(buffer, pStart);
+        rivi++;
         while ((fgets(buffer, LEN, pFile)) != NULL) {
-                if (pStart == NULL) {
+                /*if (pStart == NULL) {
                         //pStart = createNode();
                         pStart = (s_temp_node *)newNode(sizeof(s_temp_node));
                         pCur = pPrev = pStart;
@@ -58,7 +61,10 @@ s_temp_node *fileToList(const char *name)
                         linkNodes(pPrev, pCur);
                         pPrev = pCur;
                         rivi ++;
-                }
+                }*/
+                pCur = initNode(buffer, createList(&pStart, &pCur, &pPrev,
+                                            sizeof(s_temp_node)));
+                rivi ++;
         }
         fclose(pFile);
         printf("Tiedosto '%s' luettu, %d datariviä.\n\n", name, rivi);
