@@ -10,22 +10,19 @@
 /*This source file contains main program's source code*/
 /******************************************************************************/
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "ali1.h"
 #include "ali2.h"
 
-void callMenu(int *, char **, s_temp_node **, MAnalyse_t **);
-void getFileName(char **);
+void callMenu(int *, char *, s_temp_node **);
+_Bool getFileName(char *);
 
 int main(int argc, char *argv[])
 {
         s_temp_node *pStart = NULL;
-        MAnalyse_t *pMonth = NULL;
         int valinta = 0;
-        char *fName = NULL; /*Array will contain the filename or struct name*/
+        char fName[1024] = {0}; /*Array will contain the filename or struct name*/
         printf("Tämä ohjelma analysoi lämpötilatiedostoja.\n\n");
-        callMenu(&valinta, &fName, &pStart, &pMonth);
+        callMenu(&valinta, fName, &pStart);
         return (0);
 }
 /******************************************************************************/
@@ -35,8 +32,7 @@ int main(int argc, char *argv[])
  *"Pääohjelma ja valikonkäsittelyn hoitava aliohjelma tulee sijoittaa
  *paaohjelma.c tiedostoon"
  */
-void callMenu(int *valinta, char **fName, s_temp_node **pStart,
-                                            MAnalyse_t **pMonth)
+void callMenu(int *valinta, char *fName, s_temp_node **pStart)
 {
         /*do-while cycle for menu*/
         do {
@@ -58,9 +54,9 @@ void callMenu(int *valinta, char **fName, s_temp_node **pStart,
                                         vapaa(*pStart);
                                         *pStart = NULL;
                                 }
-                                printf("Anna luettavan tiedoston nimi: ");
-                                getFileName(fName);
-                                *pStart = fileToList(*fName);
+                                if (getFileName(fName)) {
+                                        *pStart = fileToList(fName);
+                                }
                                 break;
                         case 2 : /*Tallenna listan tiedot*/
                                 if (*pStart) {
@@ -71,7 +67,7 @@ void callMenu(int *valinta, char **fName, s_temp_node **pStart,
                                 break;
                         case 3 : /*Analysoi tiedot*/
                                 if (*pStart) {
-                                        analyse(*pStart, stdout);
+                                        analyse(*pStart);
                                 } else {
                                         printf("Ei analysoitavaa, lue ensin "
                                                "lämpötilatiedosto.\n\n");
@@ -80,22 +76,19 @@ void callMenu(int *valinta, char **fName, s_temp_node **pStart,
                         case 4 : /*Suorita kuukausianalyysi*/
                                 printf("Anna analysoitavalle datasetille "
                                        "nimi: ");
-                                getFileName(fName);
-                                *pMonth = createMonthList(*pMonth, *fName,
-                                                                  *pStart);
+                                scanf("%s", fName);
+                                clearStdin();
+                                createMonthList(fName, *pStart);
                                 break;
                         case 5 : /*Tulosta kaikki tulokset*/
-                                if (*pMonth != NULL) {
-                                        printTulokset(*pMonth, stdout);
-                                }
                                 break;
                         case 6 : /*Tallenna tulokset tiedostoon*/
                                 break;
                         case 7 : /*Tyhjennä analyysilista*/
                                 break;
                         case 0 : /*Lopeta*/
-                                if (*pStart) vapaa(*pStart);
-                                if (*pMonth) vapaaMonth(*pMonth);
+                                vapaa(*pStart);
+                                *pStart = NULL;
                                 printf("Kiitos ohjelman käytöstä.\n");
                                 break;
                         default:
@@ -113,12 +106,16 @@ void callMenu(int *valinta, char **fName, s_temp_node **pStart,
  *Will return 1 if one field is recieved
  *Will return 0 in other cases
  */
-void getFileName(char **fName)
+_Bool getFileName(char *fName)
 {
-        char buffer[BUFFER_SIZE];
-        fgets(buffer, BUFFER_SIZE, stdin);
-        *fName = (char *)malloc(strlen(buffer)); /*will not add 1 byte for'\0'*/
-        strcpy(*fName, strtok(buffer, "\n")); /*will extract '\n' */
+        printf("Anna luettavan tiedoston nimi: ");
+        if ((scanf("%s", fName)) == 1) {
+                clearStdin();
+                return (1);
+        } else {
+                clearStdin();
+                return (0);
+        }
 }
 /******************************************************************************/
 /* eof */

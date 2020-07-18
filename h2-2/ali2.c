@@ -21,7 +21,7 @@
  *linked list, prints out Average, Minimum and Maximum values
  *Recieves the pointer to the first list's node as a parameter.
  */
-void analyse(s_temp_node *pStart, FILE *stream)
+void analyse(s_temp_node *pStart)
 {
         int alkiot = 0;
         int min = 0;
@@ -34,7 +34,7 @@ void analyse(s_temp_node *pStart, FILE *stream)
                 if (pStart->temp < min) min = pStart->temp;
                 pStart = pStart->pNext;
         }
-        fprintf(stream, "Lämpötila-analyysi, %d alkiota:\n"
+        printf("Lämpötila-analyysi, %d alkiota:\n"
                "  Avg  Min  Max\n"
                "%5d%5d%5d\n\n", alkiot, valSumma / alkiot, min, max);
 }
@@ -189,119 +189,36 @@ void linkNodes(void *pPrev, void *pNew)
 void *vapaa(s_temp_node *pStart) {
         s_temp_node *ptr = NULL;
         while (pStart) {
+                printf("free called");
                 ptr = pStart->pNext;
                 free(pStart);
                 pStart = ptr;
         }
         return pStart;
 }
-void vapaaMonth(MAnalyse_t *pStart)
-{
-        MAnalyse_t *ptr1 = NULL;
-        while(pStart) {
-                s_tulokset *ptr2 = NULL;
-                ptr1 = pStart->pNext;
-                while(pStart->pTulokset) {
-                        ptr2 = pStart->pTulokset->pNext;
-                        free(pStart->pTulokset);
-                        pStart->pTulokset = ptr2;
-                }
-                free(pStart);
-                pStart = ptr1;
-        }
-}
 /******************************************************************************/
-MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
+void createMonthList(char *fName, s_temp_node *pData)
 {
-        MAnalyse_t *pCur = NULL;
-        s_tulokset *pTul = NULL;
-        int i = 0;
-        char kuukausi[12][7] = {"Tammi", "Helmi", "Maalis", "Huhti", "Touko",
-                                "Kesa", "Heina", "Elo", "Syys", "Loka",
-                                "Marras", "Joulu"};
-        if (pMonth == NULL) {
-                pMonth = (MAnalyse_t *)newNode(sizeof(MAnalyse_t));
-                pCur = pMonth;
-                pMonth->year = pData ->year;
-                strcpy(pMonth->paikka, fName);
-        } else {
-                pCur = pMonth;
-                while(pCur->pNext != NULL) {
-                        pCur = pCur->pNext;
-                }
-                pCur->pNext = (MAnalyse_t *)newNode(sizeof(MAnalyse_t));
-                pCur = pCur->pNext;
-                pCur->year = pData->year;
-                strcpy(pCur->paikka, fName);
-        }
-        pCur->pTulokset = NULL;
-        while (pData->pNext != NULL && i < MONTHS) {
-                int j = 0;
-                int avg = 0;
-                if (pCur->pTulokset == NULL) {
-                        pTul = pCur->pTulokset = (s_tulokset *)newNode(sizeof
-                                                                (s_tulokset));
-                } else {
-                        while(pTul->pNext != NULL) {
-                                pTul = pTul->pNext;
-                        }
-                        pTul->pNext = (s_tulokset *)newNode(sizeof(s_tulokset));
-                        pTul = pTul->pNext;
-                }
-                while(pData->pNext != NULL && pData->month == i + 1) {
-                        if (pData->temp < pTul->minTemp) {
-                                pTul->minTemp = pData->temp;
-                        }
-                        if (pData->temp > pTul->maxTemp) {
-                                pTul->maxTemp = pData->temp;
-                        }
-                        avg += pData->temp;
-                        j++;
-                        pData = pData->pNext;
-                }
-                pTul->avgTemp = avg / j;
-                strcpy(pTul->month, kuukausi[i]);
-
-                i++;
-        }
-        return pMonth;
-        printf("Kuukausianalyysi valmis.\n");
-}
-/******************************************************************************/
-void printTulokset(MAnalyse_t *pStart, FILE *stream)
-{
+        s_tulokset *pStart = NULL;
         s_tulokset *pCur = NULL;
-        while (pStart != NULL) {
-                pCur = pStart->pTulokset;
-                fprintf(stream, "%s\n%d\t", pStart->paikka, pStart->year);
-                while(pCur != NULL) {
-                        fprintf(stream, "%s\t", pCur->month);
-                        pCur = pCur->pNext;
+        s_tulokset *pPrev = NULL;
+        int i = 0;
+        while (i < MONTHS){
+                if (pStart == NULL) {
+                        pCur = pPrev = pStart = (s_tulokset *)newNode
+                        (sizeof(s_tulokset));
+                        printf("BeforeParsing Month %s\n", pStart->month);
+                        parseMonthData(&pData, &pStart, i, fName);
+                        i++;
+                } else {
+                        pCur = (s_tulokset *)newNode(sizeof(s_tulokset));
+                        parseMonthData(&pData, &pCur, i, fName);
+                        pPrev->pNext = pCur;
+                        pPrev = pCur;
+                        i++;
                 }
-                fprintf(stream, "\n");
-                pCur = pStart->pTulokset;
-                fprintf(stream, "avg:\t");
-                while(pCur !=NULL) {
-                        fprintf(stream, "%d\t", pCur->avgTemp);
-                        pCur = pCur->pNext;
-                }
-                fprintf(stream, "\n");
-                pCur = pStart->pTulokset;
-                fprintf(stream, "min:\t");
-                while(pCur !=NULL) {
-                        fprintf(stream, "%d\t", pCur->minTemp);
-                        pCur = pCur->pNext;
-                }
-                fprintf(stream, "\n");
-                pCur = pStart->pTulokset;
-                fprintf(stream, "max:\t");
-                while(pCur !=NULL) {
-                        fprintf(stream, "%d\t", pCur->maxTemp);
-                        pCur = pCur->pNext;
-                }
-                fprintf(stream, "\n\n");
-                pStart = pStart->pNext;
         }
+        printf("Kuukausianalyysi valmis.\n");
 }
 /******************************************************************************/
 void parseMonthData(s_temp_node **pData, s_tulokset **pNode, int month,

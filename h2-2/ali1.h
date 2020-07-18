@@ -10,7 +10,6 @@
 #ifndef ALI1_H
 #define ALI1_H
 #define LEN 80
-#define BUFFER_SIZE 16 * 1024
 #define MONTHS 12
 /**
  *I decided to use bit-fields because we have a lot af values in files.
@@ -22,11 +21,11 @@
  *5 bits is enough for days 32 values 0-31
  */
 struct lampotila {
-        struct lampotila *pNext; 
-        int temp      : 7;  /*Signed 128 values*/
-        unsigned year : 12; /*unsigned 4096 values*/
-        unsigned month: 4;  /*unsigned 15 values*/
-        unsigned day  : 5;  /*unsigned 31 values*/
+        struct lampotila *pNext;
+        int temp;  /*Signed 128 values*/
+        unsigned year; /*unsigned 4096 values*/
+        unsigned month;  /*unsigned 15 values*/
+        unsigned day;  /*unsigned 31 values*/
 };
 
 struct tulostiedot {
@@ -39,14 +38,13 @@ struct tulostiedot {
 
 struct monthAnalyse {
         struct monthAnalyse *pNext;
-        struct tulostiedot *pTulokset;
+        struct tulostiedot *pStart;
         char paikka[36]; /*Äteritsiputeritsipuolilautatsijänkä 35 chars*/
         unsigned year : 12;/*unsigned 4096 values*/
 };
 
 typedef struct tulostiedot s_tulokset;
 typedef struct lampotila s_temp_node;
-typedef struct monthAnalyse MAnalyse_t;
 
 s_temp_node *fileToList(const char *);
 void listToFile(s_temp_node *);

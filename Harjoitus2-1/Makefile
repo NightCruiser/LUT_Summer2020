@@ -1,8 +1,8 @@
 ohjelma: paaohjelma.o ali1.o ali2.o
-	clang paaohjelma.o ali1.o ali2.o -o ohjelma -Wall -pedantic
+	gcc paaohjelma.o ali1.o ali2.o -o ohjelma -std=c99 -Wall -pedantic -g
 paaohjelma.o: paaohjelma.c ali1.h ali2.h
-	clang paaohjelma.c -c -Wall -pedantic
+	gcc paaohjelma.c -c -std=c99 -Wall -pedantic -g
 ali1.o: ali1.c ali1.h ali2.h
-	clang ali1.c -c -std=c99 -pedantic
+	gcc ali1.c -c -std=c99 -Wall -pedantic -g
 ali2.o: ali2.c ali1.h ali2.h
-	clang ali2.c -c -std=c99 -pedantic
+	gcc ali2.c -c -std=c99 -Wall -pedantic -g
