@@ -20,7 +20,8 @@ void parseMonthData(s_temp_node **, s_tulokset **, int, char *);
 s_temp_node *createNode();
 void initNode(char *, s_temp_node *);
 void linkNodes(void *pPrev, void *pNew);
-void vapaa(void *);
+//void vapaa(void *);
+void *vapaa(s_temp_node *pStart);
 #endif /*ALI2_H*/
 
 /******************************************************************************/

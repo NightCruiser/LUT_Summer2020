@@ -88,6 +88,7 @@ void callMenu(int *valinta, char *fName, s_temp_node **pStart)
                                 break;
                         case 0 : /*Lopeta*/
                                 vapaa(*pStart);
+                                *pStart = NULL;
                                 printf("Kiitos ohjelman käytöstä.\n");
                                 break;
                         default:

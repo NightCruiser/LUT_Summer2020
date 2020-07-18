@@ -112,7 +112,7 @@ void *newNode(size_t size)
         return pNew;
 }
 /******************************************************************************/
-void createList(void *pStart, size_t size)
+/*void createList(void *pStart, size_t size)
 {
         void *pCur = NULL;
         void *pPrev = NULL;
@@ -132,7 +132,7 @@ void createList(void *pStart, size_t size)
                 printf("else called 3\n");
                 //return *pCur;
         }
-}
+}*/
 /******************************************************************************/
 
 
@@ -178,13 +178,23 @@ void linkNodes(void *pPrev, void *pNew)
  *This function clears the linked list.
  *Recieves a pointer to first node as a parameter
  */
-void vapaa(void *pStart) {
+/*void vapaa(void *pStart) {
         void *ptr = NULL;
         while (pStart) {
                 ptr = *(void **)pStart;
                 free(pStart);
                 pStart = ptr;
         }
+}*/
+void *vapaa(s_temp_node *pStart) {
+        s_temp_node *ptr = NULL;
+        while (pStart) {
+                printf("free called");
+                ptr = pStart->pNext;
+                free(pStart);
+                pStart = ptr;
+        }
+        return pStart;
 }
 /******************************************************************************/
 void createMonthList(char *fName, s_temp_node *pData)
