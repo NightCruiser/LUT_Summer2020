@@ -50,6 +50,7 @@ typedef struct monthAnalyse MAnalyse_t;
 
 s_temp_node *fileToList(const char *name, s_temp_node *);
 void listToFile(s_temp_node *);
+void monthToFile(MAnalyse_t *);
 
 #endif /*ALI1_H*/
 /******************************************************************************/

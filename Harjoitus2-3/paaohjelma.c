@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
                                         pStart = NULL;
                                 }
                                 printf("Anna luettavan tiedoston nimi: ");
+                                if (fName) free(fName);
                                 getFileName(&fName);
                                 pStart = fileToList(fName, pStart);
                                 break;
@@ -76,8 +77,13 @@ int main(int argc, char *argv[])
                                 }
                                 break;
                         case 6 : /*Tallenna tulokset tiedostoon*/
+                                monthToFile(pMonth);
                                 break;
                         case 7 : /*Tyhjennä analyysilista*/
+                                if (pStart) pStart = vapaa(pStart);
+                                if (pMonth) vapaaMonth(pMonth);
+                                pStart = NULL;
+                                pMonth = NULL;
                                 break;
                         case 0 : /*Lopeta*/
                                 free(fName);

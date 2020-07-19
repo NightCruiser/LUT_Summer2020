@@ -58,11 +58,10 @@ void clearStdin()
  */
 void initNode(char *string, s_temp_node *pCur)
 {
-        char buffer[LEN];
         pCur->year = (unsigned)atoi(strtok(string, ";"));
         pCur->month = (unsigned)atoi(strtok(NULL, ";"));
         pCur->day = (unsigned)atoi(strtok(NULL, ";"));
-        strcpy(buffer, strtok(NULL, ";")); /*skipping time*/
+        strtok(NULL, ";"); /*skipping time*/
         pCur->temp = atoi(strtok(NULL, "\n"));
 }
 /******************************************************************************/
