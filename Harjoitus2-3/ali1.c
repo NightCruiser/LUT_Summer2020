@@ -16,19 +16,17 @@
 #include "ali2.h"
 /******************************************************************************/
 /**
- *s_temp_node *fileToList(const char *); - declaration
+ *s_temp_node *fileToList(const char *name, s_temp_node *pStart); - declaration
  *This function will read needed values from file
  *and save it to linked list nodes.
- *Will recieve as a parameter the name of the file
+ *Will recieve as a parameter the name of the file and a pointer to Start.
  *name also can include the path if file is located
- *outside of program's folder.
+ *outside of program's folder(for Windows users: use \\ instead of \).
  *Will return a pointer to the first node of newly created linked list.
  */
 s_temp_node *fileToList(const char *name, s_temp_node *pStart)
 {
-        //s_temp_node *pStart = NULL;
         s_temp_node *pCur = NULL;
-        //s_temp_node *pPrev = NULL;
         int rivi = 0;
         char buffer[LEN];
         FILE *pFile = NULL;
@@ -41,28 +39,16 @@ s_temp_node *fileToList(const char *name, s_temp_node *pStart)
         }
         printf("Luetaan tiedosto '%s'\n", name);
         fgets(buffer, LEN, pFile); /*we don't need the first string*/
-        /*This loop reads the file string by string,
-         *parse the string and creates/inits the linked list
-         */
+
         pStart = (s_temp_node *)newNode(sizeof(s_temp_node));
         pCur = pStart;
         fgets(buffer, LEN, pFile);
         initNode(buffer, pStart);
         rivi++;
+        /*This loop reads the file string by string,
+        *parse the string and creates/inits the linked list
+        */
         while ((fgets(buffer, LEN, pFile)) != NULL) {
-                /*if (pStart == NULL) {
-                        pStart = (s_temp_node *)newNode(sizeof(s_temp_node));
-                        pCur = pPrev = pStart;
-                        initNode(buffer, pStart);
-                        rivi ++;
-                } else {
-
-                        pCur = (s_temp_node *)newNode(sizeof(s_temp_node));
-                        initNode(buffer, pCur);
-                        linkNodes(pPrev, pCur);
-                        pPrev = pCur;
-                        rivi ++;
-                }*/
                 pCur->pNext = (s_temp_node *)newNode(sizeof(s_temp_node));
                 pCur = pCur->pNext;
                 initNode(buffer, pCur);

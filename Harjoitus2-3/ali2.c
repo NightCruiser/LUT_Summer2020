@@ -21,7 +21,7 @@
  *linked list, prints out Average, Minimum and Maximum values
  *Recieves the pointer to the first list's node as a parameter.
  */
-void analyse(s_temp_node *pStart, FILE *stream)
+void analyse(s_temp_node *pStart)
 {
         int alkiot = 0;
         int min = 0;
@@ -34,7 +34,7 @@ void analyse(s_temp_node *pStart, FILE *stream)
                 if (pStart->temp < min) min = pStart->temp;
                 pStart = pStart->pNext;
         }
-        fprintf(stream, "Lämpötila-analyysi, %d alkiota:\n"
+        printf("Lämpötila-analyysi, %d alkiota:\n"
                "  Avg  Min  Max\n"
                "%5d%5d%5d\n\n", alkiot, valSumma / alkiot, min, max);
 }
@@ -51,25 +51,6 @@ void clearStdin()
                 if (getchar() == '\n') break;
         }
 }
-
-/******************************************************************************/
-/**
- *s_temp_node *createNode(); - declaration
- *This function will allocate a memory for s_temp_node structure
- *Will set the pointer to next inside newly created node to NULL.
- *In case of success will return a pointer to newly created node;
- *In case of error will allert and exit with code (-1).
- */
-s_temp_node *createNode()
-{
-        s_temp_node *pNew = NULL;
-        if (!(pNew = (s_temp_node *)malloc(sizeof(s_temp_node)))) {
-                perror("Muistinvaraus epäonnistui");
-                exit(-1);
-        }
-        pNew->pNext = NULL;
-        return pNew;
-}
 /******************************************************************************/
 /**
  *This function will initialize the given node with values
@@ -77,100 +58,31 @@ s_temp_node *createNode()
  */
 void initNode(char *string, s_temp_node *pCur)
 {
-        pCur->year = atoi(strtok(string, ";"));
-        pCur->month = atoi(strtok(NULL, ";"));
-        pCur->day = atoi(strtok(NULL, ";"));
-        atoi(strtok(NULL, ";")); /*skipping time*/
+        char buffer[LEN];
+        pCur->year = (unsigned)atoi(strtok(string, ";"));
+        pCur->month = (unsigned)atoi(strtok(NULL, ";"));
+        pCur->day = (unsigned)atoi(strtok(NULL, ";"));
+        strcpy(buffer, strtok(NULL, ";")); /*skipping time*/
         pCur->temp = atoi(strtok(NULL, "\n"));
 }
 /******************************************************************************/
 /**
- *s_tulokset *createMonthNode(); - declaration
+ *void *newNode(size_t size); - declaration
  *This function will allocate a memory for s_tulokset structure
  *Will set the pointer to next inside newly created node to NULL.
  *In case of success will return a pointer to newly created node;
  *In case of error will allert and exit with code (-1).
  */
-/*s_tulokset *createMonthNode()
-{
-        s_tulokset *pNew = NULL;
-        if (!(pNew = (s_tulokset *)malloc(sizeof(s_tulokset)))) {
-                perror("Muistinvaraus epäonnistui");
-                exit(-1);
-        }
-        pNew->pNext = NULL;
-        return pNew;
-}*/
 void *newNode(size_t size)
 {
         void *pNew = NULL;
-        if (!(pNew = malloc(sizeof(size)))) {
+        if (!(pNew = malloc(size))) {
                 perror("Muistinvaraus epäonnistui");
                 exit(-1);
         }
+        memset(pNew, 0, size);
         *(void **)pNew = NULL;
         return pNew;
-}
-/******************************************************************************/
-/*void createList(void *pStart, size_t size)
-{
-        void *pCur = NULL;
-        void *pPrev = NULL;
-        printf("create called\n");
-        if (*(void **)pStart == NULL) {
-                //pStart = createNode();
-                (*(void **)pStart = newNode(size);
-                pCur = pPrev = (*(void **)pStartpStart;
-                //return pStart;
-        } else {
-                printf("else called\n");
-                pCur = newNode(size);
-                printf("else called 1\n");
-                linkNodes(*pPrev, *pCur);
-                printf("else called 2\n");
-                *pPrev = *pCur;
-                printf("else called 3\n");
-                //return *pCur;
-        }
-}*/
-/******************************************************************************/
-
-
-/******************************************************************************/
-/**
- *void linkNodes(s_temp_node *, s_temp_node *); - declaration.
- *This function will link two nodes
- *Will recieve as a parameters two pointers.
- *First pointer to the previous node
- *Second pointer to the node that we will link with previous.
- *Function can link a new node in any position in already created
- *linked list. In this case new node will be added between the node
- *pointed as previous and the node previous pointing to.
- *!!!except the first position!!!.
- *
- */
-void linkNodes(void *pPrev, void *pNew)
-{
-        if (*(void **)pPrev == NULL) {
-                *(void **)pPrev = pNew;
-                return;
-        }
-        /*we will not use this feature but this can be useful
-         *when adding node in a special position, except the first position.
-         *Added this just because of thinking about LUT7-2 exercise, that was
-         *done not in best way.
-         */
-        if (*(void **)pPrev) {
-                /*initialization inside the block is allowed by standart
-                 *it must be right after the curly bracket.
-                 *Useful in case when we need this variable just inside
-                 *this block.
-                 */
-                void *tmp = NULL;
-                tmp = *(void **)pPrev;
-                *(void **)pPrev = pNew;
-                *(void **)pNew = tmp;
-        }
 }
 /******************************************************************************/
 /**
@@ -178,14 +90,6 @@ void linkNodes(void *pPrev, void *pNew)
  *This function clears the linked list.
  *Recieves a pointer to first node as a parameter
  */
-/*void vapaa(void *pStart) {
-        void *ptr = NULL;
-        while (pStart) {
-                ptr = *(void **)pStart;
-                free(pStart);
-                pStart = ptr;
-        }
-}*/
 void *vapaa(s_temp_node *pStart) {
         s_temp_node *ptr = NULL;
         while (pStart) {
@@ -303,37 +207,5 @@ void printTulokset(MAnalyse_t *pStart, FILE *stream)
                 pStart = pStart->pNext;
         }
 }
-/******************************************************************************/
-void parseMonthData(s_temp_node **pData, s_tulokset **pNode, int month,
-        char *fName)
-        {
-                int tmpSumma = 0;
-                int values = 0;
-                int min = 0;
-                int max = 0;
-                char kuukausi[12][7] = {"Tammi", "Helmi", "Maalis", "Huhti", "Touko",
-                "Kesa", "Heina", "Elo", "Syys", "Loka",
-                "Marras", "Joulu"};
-
-                printf("parse called\n");
-                printf("%s\n", kuukausi[month]);
-                strcpy((*pNode)->month, kuukausi[month]);
-                printf("%s\n", (*pNode)->month);
-                //sscanf((*pNode)->kaupunki, "%s", fName);
-                //(*pNode)->year = (*pData)->year;
-                while ((*pData)->month == month + 1) {
-                        tmpSumma += (*pData)->temp;
-                        if (((*pData)->temp) > max) max = (*pData)->temp;
-                        if (((*pData)->temp) < min) min = (*pData)->temp;
-                        values++;
-                        (*pData) = (*pData)->pNext;
-                }
-
-                (*pNode)->avgTemp = tmpSumma / values;
-                (*pNode)->minTemp = min;
-                (*pNode)->maxTemp = max;
-                printf("%d, %d, %d\n", (*pNode)->avgTemp, (*pNode)->minTemp,
-                (*pNode)->maxTemp);
-        }
 /******************************************************************************/
 /* eof */

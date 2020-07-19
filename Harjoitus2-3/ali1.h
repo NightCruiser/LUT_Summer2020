@@ -23,25 +23,25 @@
  */
 struct lampotila {
         struct lampotila *pNext;
-        int temp/*      : 7*/;  /*Signed 128 values*/
-        unsigned year /*: 12*/; /*unsigned 4096 values*/
-        unsigned month/*: 4*/;  /*unsigned 15 values*/
-        unsigned day/*  : 5*/;  /*unsigned 31 values*/
+        int temp      : 7;  /*Signed 128 values*/
+        unsigned year : 12; /*unsigned 4096 values*/
+        unsigned month: 4;  /*unsigned 15 values*/
+        unsigned day  : 5;  /*unsigned 31 values*/
 };
 
 struct tulostiedot {
         struct tulostiedot *pNext;
         char month[7];     /*6 characters + \0 is enough for us*/
-        int avgTemp/*   : 7*/; /*Signed 128 values*/
-        int minTemp/*   : 7*/; /*Signed 128 values*/
-        int maxTemp/*   : 7*/; /*Signed 128 values*/
+        int avgTemp   : 7; /*Signed 128 values*/
+        int minTemp   : 7; /*Signed 128 values*/
+        int maxTemp   : 7; /*Signed 128 values*/
 };
 
 struct monthAnalyse {
         struct monthAnalyse *pNext;
         struct tulostiedot *pTulokset;
         char paikka[36]; /*Äteritsiputeritsipuolilautatsijänkä 35 chars*/
-        unsigned year/* : 12*/;/*unsigned 4096 values*/
+        unsigned year : 12;/*unsigned 4096 values*/
 };
 
 typedef struct tulostiedot s_tulokset;
