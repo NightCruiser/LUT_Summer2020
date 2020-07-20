@@ -177,7 +177,9 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
 /******************************************************************************/
 void printTulokset(MAnalyse_t *pStart, FILE *stream)
 {
+        int i = 0;
         s_tulokset *pCur = NULL;
+        char printArr[3][4] = {"avg", "min", "max"};
         while (pStart != NULL) {
                 pCur = pStart->pTulokset;
                 fprintf(stream, "%s\n%d\t", pStart->paikka, pStart->year);
@@ -187,24 +189,22 @@ void printTulokset(MAnalyse_t *pStart, FILE *stream)
                 }
                 fprintf(stream, "\n");
                 pCur = pStart->pTulokset;
-                fprintf(stream, "avg:\t");
-                while(pCur !=NULL) {
-                        fprintf(stream, "%d\t", pCur->avgTemp);
-                        pCur = pCur->pNext;
-                }
-                fprintf(stream, "\n");
-                pCur = pStart->pTulokset;
-                fprintf(stream, "min:\t");
-                while(pCur !=NULL) {
-                        fprintf(stream, "%d\t", pCur->minTemp);
-                        pCur = pCur->pNext;
-                }
-                fprintf(stream, "\n");
-                pCur = pStart->pTulokset;
-                fprintf(stream, "max:\t");
-                while(pCur !=NULL) {
-                        fprintf(stream, "%d\t", pCur->maxTemp);
-                        pCur = pCur->pNext;
+                for (i = 0; i < 3; i++) {
+                        fprintf(stream, "%s:\t", printArr[i]);
+                        while(pCur !=NULL) {
+                                if (i == 0) {
+                                        fprintf(stream, "%d\t", pCur->avgTemp);
+                                }
+                                if (i == 1) {
+                                        fprintf(stream, "%d\t", pCur->minTemp);
+                                }
+                                if (i == 2) {
+                                        fprintf(stream, "%d\t", pCur->maxTemp);
+                                }
+                                pCur = pCur->pNext;
+                        }
+                        fprintf(stream, "\n");
+                        pCur = pStart->pTulokset;
                 }
                 fprintf(stream, "\n\n");
                 pStart = pStart->pNext;

@@ -112,7 +112,7 @@ void getFileName(char **fName)
         char buffer[BUFFER_SIZE] = {0};
         do {
                 fgets(buffer, BUFFER_SIZE, stdin);
-                len = strlen(buffer) - 1;
+                len = strlen(buffer) - 1; /*fgets saves '\n' character, so -1*/
                 if (len < 1) {
                         printf("Nimi on tyhjä, yritä uudestaan.\n>> ");
                 }

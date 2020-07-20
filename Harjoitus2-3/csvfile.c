@@ -130,3 +130,38 @@ void monthToFile(MAnalyse_t *pStart)
         fclose(pCsv);
 }
 /******************************************************************************/
+void printTulokset(MAnalyse_t *pStart, FILE *stream)
+{
+        s_tulokset *pCur = NULL;
+        while (pStart != NULL) {
+                pCur = pStart->pTulokset;
+                fprintf(stream, "%s\n%d\t", pStart->paikka, pStart->year);
+                while(pCur != NULL) {
+                        fprintf(stream, "%s\t", pCur->month);
+                        pCur = pCur->pNext;
+                }
+                fprintf(stream, "\n");
+                pCur = pStart->pTulokset;
+                fprintf(stream, "avg:\t");
+                while(pCur !=NULL) {
+                        fprintf(stream, "%d\t", pCur->avgTemp);
+                        pCur = pCur->pNext;
+                }
+                fprintf(stream, "\n");
+                pCur = pStart->pTulokset;
+                fprintf(stream, "min:\t");
+                while(pCur !=NULL) {
+                        fprintf(stream, "%d\t", pCur->minTemp);
+                        pCur = pCur->pNext;
+                }
+                fprintf(stream, "\n");
+                pCur = pStart->pTulokset;
+                fprintf(stream, "max:\t");
+                while(pCur !=NULL) {
+                        fprintf(stream, "%d\t", pCur->maxTemp);
+                        pCur = pCur->pNext;
+                }
+                fprintf(stream, "\n\n");
+                pStart = pStart->pNext;
+        }
+}
