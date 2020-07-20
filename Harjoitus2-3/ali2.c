@@ -24,8 +24,8 @@
 void analyse(s_temp_node *pStart)
 {
         int alkiot = 0;
-        int min = 0;
-        int max = 0;
+        int min = 63;/*We have 7 bit values in struct for temperature,*/
+        int max = -64;/*so -64 +63 is ok for min/max values*/
         int valSumma = 0;
         while (pStart) {
                 valSumma += pStart->temp;
@@ -141,6 +141,8 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
         while (pData->pNext != NULL && i < MONTHS) {
                 int j = 0;
                 int avg = 0;
+                int min = 63;/*We have 7 bit values in struct for temperature,*/
+                int max = -64;/*so -64 +63 is ok for min/max values*/
                 if (pCur->pTulokset == NULL) {
                         pTul = pCur->pTulokset = (s_tulokset *)newNode(sizeof
                                                                 (s_tulokset));
@@ -153,11 +155,13 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
                         pTul = pTul->pNext;
                 }
                 while(pData->pNext != NULL && pData->month == i + 1) {
-                        if (pData->temp < pTul->minTemp) {
-                                pTul->minTemp = pData->temp;
+                        if (pData->temp < min) {
+                                min = pData->temp;
+                                pTul->minTemp = min;
                         }
-                        if (pData->temp > pTul->maxTemp) {
-                                pTul->maxTemp = pData->temp;
+                        if (pData->temp > max) {
+                                max = pData->temp;
+                                pTul->maxTemp = max;
                         }
                         avg += pData->temp;
                         j++;

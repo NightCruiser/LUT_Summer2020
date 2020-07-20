@@ -108,9 +108,18 @@ int main(int argc, char *argv[])
  */
 void getFileName(char **fName)
 {
-        char buffer[BUFFER_SIZE];
-        fgets(buffer, BUFFER_SIZE, stdin);
-        *fName = (char *)malloc(strlen(buffer)); /*will not add 1 byte for'\0'*/
+        size_t len = 0;
+        char buffer[BUFFER_SIZE] = {0};
+        do {
+                fgets(buffer, BUFFER_SIZE, stdin);
+                if ((len = strlen(buffer)) < 1) {
+                        printf("Nimi on tyhjä, yritä uudestaan");
+                }
+        } while (len < 1);
+        if (!(*fName = (char *)malloc(len))) { /*will not add 1 byte for'\0'*/
+                perror("Muistinvaraus epäonnistui");
+                exit (-1);
+        }
         strcpy(*fName, strtok(buffer, "\n")); /*will extract '\n' */
 }
 /******************************************************************************/
