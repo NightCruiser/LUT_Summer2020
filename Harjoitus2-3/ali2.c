@@ -56,7 +56,7 @@ void clearStdin()
  *This function will initialize the given node with values
  *recieved by parsing the string, that was read from file.
  */
-void initNode(const char *string, s_temp_node *pCur)
+void initNode(char *string, s_temp_node *pCur)
 {
         pCur->year = (unsigned)atoi(strtok(string, ";"));
         pCur->month = (unsigned)atoi(strtok(NULL, ";"));
@@ -75,6 +75,8 @@ void initNode(const char *string, s_temp_node *pCur)
  *So this universal function is usable.
  *In case of success will return a pointer to newly created node;
  *In case of error will allert and exit with code (-1).
+ *Recieves as a parameter size of bytes that can be recieved by sizeof function
+ *Example (s_temp_node *)newNode(sizeof(s_temp_node));.
  */
 void *newNode(size_t size)
 {
@@ -136,13 +138,18 @@ void *vapaa(s_temp_node *pStart)
  *This is improved void *vapaa(void *) function for 2-dimensional lists.
  *Example : in our case each node of linked list contains another linked list.
  *!!!IN ALL STRUCTURES FIRST BYTES MUST BE A POINTER TO NEXT!!!
+ *
  */
 void vapaaMonth(void *pStart)
 {
         void *ptr1 = NULL;
         while(pStart) {
                 ptr1 = *(void **)pStart;
-                vapaa(*(void **)pStart);
+                vapaa(*((void **)pStart + 1));/*+1 means that we need to
+                                                access the second variable.
+                                                (which is a pointer to 2nd list)
+                                                we jump + size of pointer Inside
+                                                the memory*/
                 free(pStart);
                 pStart = ptr1;
         }

@@ -15,7 +15,7 @@ void clearStdin();
 void *newNode(size_t size);
 MAnalyse_t *createMonthList(MAnalyse_t *, const char *, const s_temp_node *);
 void printTulokset(MAnalyse_t *, FILE *);
-void initNode(const char *, s_temp_node *);
+void initNode(char *, s_temp_node *);
 void vapaaMonth(void *);
 void *vapaa(void *);
 #endif /*ALI2_H*/

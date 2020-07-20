@@ -117,12 +117,12 @@ void getFileName(char **fName)
         char buffer[BUFFER_SIZE] = {0};
         do {
                 fgets(buffer, BUFFER_SIZE, stdin);
-                len = strlen(buffer) - 1; /*fgets saves '\n' character, so -1*/
+                len = (int)strlen(buffer);
                 if (len < 1) {
                         printf("Nimi on tyhjä, yritä uudestaan.\n>> ");
                 }
         } while (len < 1);
-        if (!(*fName = (char *)malloc(len))) { /*will not add 1 byte for'\0'*/
+        if (!(*fName = (char *)malloc(len))) {
                 perror("Muistinvaraus epäonnistui");
                 exit (-1);
         }
