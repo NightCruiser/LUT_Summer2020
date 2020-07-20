@@ -3,11 +3,13 @@
  * Otsikkotiedot: paaohjelma source file paaohjelma.c
  * Tekijä: Valentin Kriukov
  * Opiskelijanumero: 0603219
- * Päivämäärä: 7.14.2020
+ * Päivämäärä: 7.15.2020
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /******************************************************************************/
 /*This source file contains main program's source code*/
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+  Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #include <stdio.h>
 #include <string.h>

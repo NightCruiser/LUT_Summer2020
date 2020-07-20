@@ -3,17 +3,18 @@
  * Otsikkotiedot: aliohjelmien 2 source file ali2.c
  * Tekijä: Valentin Kriukov
  * Opiskelijanumero: 0603219
- * Päivämäärä: 7.14.2020
+ * Päivämäärä: 7.15.2020
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /******************************************************************************/
 /*This source file contains other functions*/
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+  Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ali1.h"
-#include "ali2.h"
+#include "ali1.h" /*for structures*/
 /******************************************************************************/
 /**
  *void analyse(Data *); - declaration
@@ -37,32 +38,6 @@ void analyse(Data *pStart)
         printf("Lämpötila-analyysi, %d alkiota:\n"
                "  Avg  Min  Max\n"
                "%5d%5d%5d\n\n", alkiot, valSumma / alkiot, min, max);
-}
-/******************************************************************************/
-/**
- *void clearStdin(); - declaration.
- *This function will clear stdin. For example in cases when programm will
- *recieve extra characters as input or in case when after inputed string
- *'\n' remains in stdin.
- */
-void clearStdin()
-{
-        while (1) {
-                if (getchar() == '\n') break;
-        }
-}
-/******************************************************************************/
-/**
- *This function will initialize the given node with values
- *recieved by parsing the string, that was read from file.
- */
-void initNode(char *string, Data *pCur)
-{
-        pCur->year = (unsigned)atoi(strtok(string, ";"));
-        pCur->month = (unsigned)atoi(strtok(NULL, ";"));
-        pCur->day = (unsigned)atoi(strtok(NULL, ";"));
-        strtok(NULL, ";"); /*skipping time*/
-        pCur->temp = atoi(strtok(NULL, "\n"));
 }
 /******************************************************************************/
 /**
@@ -235,6 +210,8 @@ Month *createMonthList(Month *pMonth, const char *fName,
                 int avg = 0;/*will calculate the sum for average value*/
                 int min = 63;/*We have 7 bit values in struct for temperature,*/
                 int max = -64;/*so -64 +63 is ok for min/max values*/
+                /*The Standart allows declarations inside the block
+                 right after the curly bracket*/
 
                 /*checks for already existing Tulostiedot list inside the
                  MonthAnalyse strusture, if doesn't exist,

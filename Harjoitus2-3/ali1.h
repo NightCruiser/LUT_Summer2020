@@ -3,9 +3,13 @@
  * Otsikkotiedot: alieohjelmien 1 header file ali1.h
  * Tekijä: Valentin Kriukov
  * Opiskelijanumero: 0603219
- * Päivämäärä: 7.14.2020
+ * Päivämäärä: 7.15.2020
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
+/******************************************************************************/
+/*Ali1 Header file.*/
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+  Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #ifndef ALI1_H
 #define ALI1_H
@@ -51,6 +55,8 @@ typedef struct MonthAnalyse_t Month;
 Data *fileToList(const char *name, Data *);
 void listToFile(Data *);
 void monthToFile(Month *);
+void initNode(char *, Data *);
+void clearStdin();
 
 #endif /*ALI1_H*/
 /******************************************************************************/

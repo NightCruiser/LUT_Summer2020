@@ -3,16 +3,20 @@
  * Otsikkotiedot: aliohjelmien 1 source file ali1.c
  * Tekijä: Valentin Kriukov
  * Opiskelijanumero: 0603219
- * Päivämäärä: 7.14.2020
+ * Päivämäärä: 7.15.2020
  * Yhteistyö ja lähteet, nimi ja yhteistyön muoto:
  */
 /******************************************************************************/
-/*This Source file contains functions needed for work with files*/
+/*This Source file contains functions needed for work with files and some
+  other functions to ease the work*/
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+  Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "ali1.h"
-#include "ali2.h"
+#include "ali2.h"/*for NewNode need in both files*/
 /******************************************************************************/
 /**
  *Data *fileToList(const char *name, Data *pStart); - declaration
@@ -38,24 +42,36 @@ Data *fileToList(const char *name, Data *pStart)
         }
         printf("Luetaan tiedosto '%s'\n", name);
         fgets(buffer, LEN, pFile); /*we don't need the first string*/
-
-        pStart = (Data *)newNode(sizeof(Data));
-        pCur = pStart;
-        fgets(buffer, LEN, pFile);
-        initNode(buffer, pStart);
-        rivi++;
         /*This loop reads the file string by string,
         *parse the string and creates/inits the linked list
         */
         while ((fgets(buffer, LEN, pFile)) != NULL) {
-                pCur->pNext = (Data *)newNode(sizeof(Data));
-                pCur = pCur->pNext;
+                if (!pStart) {
+                        pStart = (Data *)newNode(sizeof(Data));
+                        pCur = pStart;
+                } else {
+                        pCur->pNext = (Data *)newNode(sizeof(Data));
+                        pCur = pCur->pNext;
+                }
                 initNode(buffer, pCur);
                 rivi++;
         }
         fclose(pFile);
         printf("Tiedosto '%s' luettu, %d datariviä.\n\n", name, rivi);
         return pStart;
+}
+/******************************************************************************/
+/**
+ *This function will initialize the given node with values
+ *recieved by parsing the string, that was read from file.
+ */
+void initNode(char *string, Data *pCur)
+{
+        pCur->year = (unsigned)atoi(strtok(string, ";"));
+        pCur->month = (unsigned)atoi(strtok(NULL, ";"));
+        pCur->day = (unsigned)atoi(strtok(NULL, ";"));
+        strtok(NULL, ";"); /*skipping time*/
+        pCur->temp = atoi(strtok(NULL, "\n"));
 }
 /******************************************************************************/
 /**
@@ -151,6 +167,19 @@ void monthToFile(Month *pStart)
         }
         printf("Tiedot tallennettu tiedostoon: 'tulostiedot.csv'\n");
         fclose(pCsv);
+}
+/******************************************************************************/
+/**
+ *void clearStdin(); - declaration.
+ *This function will clear stdin. For example in cases when programm will
+ *recieve extra characters as input or in case when after inputed string
+ *'\n' remains in stdin.
+ */
+void clearStdin()
+{
+        while (1) {
+                if (getchar() == '\n') break;
+        }
 }
 /******************************************************************************/
 /* eof */
