@@ -65,11 +65,16 @@ int main(int argc, char *argv[])
                                 }
                                 break;
                         case 4 : /*Suorita kuukausianalyysi*/
-                                printf("Anna analysoitavalle datasetille "
-                                       "nimi: ");
-                                free(fName);
-                                getFileName(&fName);
-                                pMonth = createMonthList(pMonth, fName, pStart);
+                                if(pStart) {
+                                        printf("Anna analysoitavalle "
+                                               "datasetille nimi: ");
+                                        free(fName);
+                                        getFileName(&fName);
+                                        pMonth = createMonthList(pMonth, fName, pStart);
+                                } else {
+                                        printf("Ei analysoitavaa, lue ensin "
+                                               "lämpötilatiedosto.\n\n");
+                                }
                                 break;
                         case 5 : /*Tulosta kaikki tulokset*/
                                 if (pMonth != NULL) {

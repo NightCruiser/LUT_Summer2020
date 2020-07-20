@@ -13,7 +13,7 @@
 void analyse(s_temp_node *);
 void clearStdin();
 void *newNode(size_t size);
-MAnalyse_t *createMonthList(MAnalyse_t *, char *, s_temp_node *);
+MAnalyse_t *createMonthList(MAnalyse_t *, const char *, const s_temp_node *);
 void printTulokset(MAnalyse_t *pStart, FILE *stream);
 void initNode(char *, s_temp_node *);
 void vapaaMonth(MAnalyse_t *pStart);

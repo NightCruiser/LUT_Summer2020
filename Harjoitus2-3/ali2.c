@@ -114,35 +114,66 @@ void vapaaMonth(MAnalyse_t *pStart)
         }
 }
 /******************************************************************************/
-MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
+/**
+ *MAnalyse_t *createMonthList(MAnalyse_t *, const char *, s_temp_node *); - decl
+ *This function performs a month analyse based on data that was recieved
+ *by s_temp_node *fileToList(const char *name, s_temp_node *) function.
+ *The function will create a linked list of structures MonthsAnalyse.
+ *Nodes will contain information about place and year.
+ *Inside every node will be created a second linked list of structures
+ *where every node will contain month's average, middle and maximum temperature.
+ *Recieves as parameters a pointer to the first element of MonthAnalyse list,
+ *pointer to an array of chars that will be used to store a name of analyse and
+ *a pointer to linked list called here "Data" with analysed data from file.
+ *Will return a pointer to first element of MonthAnalyse list
+ */
+MAnalyse_t *createMonthList(MAnalyse_t *pMonth, const char *fName,
+                            const s_temp_node *pData)
 {
         MAnalyse_t *pCur = NULL;
         s_tulokset *pTul = NULL;
-        int i = 0;
+        int i = 0; /*this variable will count the months*/
+        /*Array of months. It will help to fulfill the list*/
         char kuukausi[MONTHS][7] = {"Tammi", "Helmi", "Maalis", "Huhti", "Touko"
                                     ,"Kesa", "Heina", "Elo", "Syys", "Loka",
                                     "Marras", "Joulu"};
+        /*if there is no previously created MonthAnalyse list,
+         the new one will be created*/
         if (pMonth == NULL) {
                 pMonth = (MAnalyse_t *)newNode(sizeof(MAnalyse_t));
                 pCur = pMonth;
-                pMonth->year = pData ->year;
-                strcpy(pMonth->paikka, fName);
+                pMonth->year = pData ->year;  /*initing the variable year*/
+                strcpy(pMonth->paikka, fName);/*initing the place's name*/
         } else {
+        /*In case if list already exist the loop will find the last node
+        and create the new node*/
                 pCur = pMonth;
                 while(pCur->pNext != NULL) {
                         pCur = pCur->pNext;
                 }
                 pCur->pNext = (MAnalyse_t *)newNode(sizeof(MAnalyse_t));
                 pCur = pCur->pNext;
-                pCur->year = pData->year;
-                strcpy(pCur->paikka, fName);
+                pCur->year = pData->year;   /*initing the variable year*/
+                strcpy(pCur->paikka, fName);/*initing the place's name*/
         }
-        pCur->pTulokset = NULL;
+        pCur->pTulokset = NULL; /*will NULL the pointer to Tulokstiedot Inside
+                                  the MonthAnalyse structure,
+                                  because there is a garbage after allocating*/
+
+        /*In this loop we will check at first is there a next element of
+         Data analyse list, because there is no guarantee that file results
+         will contain every month's information.
+         If we have all the months, the second condition will help not to run
+         over*/
         while (pData->pNext != NULL && i < MONTHS) {
-                int j = 0;
-                int avg = 0;
+                int j = 0; /*an amount of samples for average value*/
+                int avg = 0;/*will calculate the sum for average value*/
                 int min = 63;/*We have 7 bit values in struct for temperature,*/
                 int max = -64;/*so -64 +63 is ok for min/max values*/
+
+                /*checks for already existing Tulostiedot list inside the
+                 MonthAnalyse strusture, if doesn't exist,
+                 creates the new one*/
                 if (pCur->pTulokset == NULL) {
                         pTul = pCur->pTulokset = (s_tulokset *)newNode(sizeof
                                                                 (s_tulokset));
@@ -154,6 +185,14 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
                         pTul->pNext = (s_tulokset *)newNode(sizeof(s_tulokset));
                         pTul = pTul->pNext;
                 }
+                /*this loop initialise the newly created node of Tulostiedot
+                 list with data recieved from Data list. For every node
+                 this loop will parse the data that related to month given
+                 by "i" variable. Added +1, because it was initioalised by 0.
+                 The first condition checks the existing of next Data node,
+                 again we have no guarantee that we have information about
+                 all the months and the second condition will not let us
+                 run over the needed month*/
                 while(pData->pNext != NULL && pData->month == i + 1) {
                         if (pData->temp < min) {
                                 min = pData->temp;
@@ -164,17 +203,20 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, char *fName, s_temp_node *pData)
                                 pTul->maxTemp = max;
                         }
                         avg += pData->temp;
-                        j++;
+                        j++; /*sample values increment*/
                         pData = pData->pNext;
                 }
-                pTul->avgTemp = avg / j;
-                strcpy(pTul->month, kuukausi[i]);
-                i++;
+                pTul->avgTemp = avg / j; /*sum divided by an amount of samples*/
+                strcpy(pTul->month, kuukausi[i]);/*will init the month's name*/
+                i++; /*month increment*/
         }
         return pMonth;
         printf("Kuukausianalyysi valmis.\n");
 }
 /******************************************************************************/
+/**
+ *This function will print out
+ */
 void printTulokset(MAnalyse_t *pStart, FILE *stream)
 {
         int i = 0;
