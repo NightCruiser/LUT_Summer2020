@@ -15,13 +15,13 @@
 #include "ali1.h"
 #include "ali2.h"
 
-void callMenu(int *, char **, s_temp_node **, MAnalyse_t **);
+void callMenu(int *, char **, Data **, Month **);
 void getFileName(char **);
 
 int main(int argc, char *argv[])
 {
-        s_temp_node *pStart = NULL;
-        MAnalyse_t *pMonth = NULL;
+        Data *pStart = NULL;
+        Month *pMonth = NULL;
         int valinta = 0;
         char *fName = NULL; /*Array will contain the filename or struct name*/
         printf("Tämä ohjelma analysoi lämpötilatiedostoja.\n\n");
@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
 }
 /******************************************************************************/
 /**
- *void callMenu(int *, char *, s_temp_node **); - declaration
+ *void callMenu(int *, char *, Data **); - declaration
  *I am not sure about this move, but it was in task
  *"Pääohjelma ja valikonkäsittelyn hoitava aliohjelma tulee sijoittaa
  *paaohjelma.c tiedostoon"
  */
-void callMenu(int *valinta, char **fName, s_temp_node **pStart,
-                                            MAnalyse_t **pMonth)
+void callMenu(int *valinta, char **fName, Data **pStart,
+                                            Month **pMonth)
 {
         /*do-while cycle for menu*/
         do {

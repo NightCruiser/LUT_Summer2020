@@ -26,10 +26,10 @@ struct lampotila {
         unsigned day  : 5;  /*unsigned 31 values*/
         struct lampotila *pNext;
 };
-typedef struct lampotila s_temp_node;
+typedef struct lampotila Data;
 
-s_temp_node *fileToList(const char *);
-void listToFile(s_temp_node *);
+Data *fileToList(const char *);
+void listToFile(Data *);
 
 #endif /*ALI1_H*/
 /******************************************************************************/

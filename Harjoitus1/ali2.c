@@ -15,12 +15,12 @@
 #include "ali1.h"
 /******************************************************************************/
 /**
- *void analyse(s_temp_node *); - declaration
+ *void analyse(Data *); - declaration
  *This function analyses the temperature data from previously generated
  *linked list, prints out Average, Minimum and Maximum values
  *Recieves the pointer to the first list's node as a parameter.
  */
-void analyse(s_temp_node *pStart)
+void analyse(Data *pStart)
 {
         int alkiot = 0;
         int min = 0;
@@ -53,16 +53,16 @@ void clearStdin()
 
 /******************************************************************************/
 /**
- *s_temp_node *createNode(); - declaration
- *This function will allocate a memory for s_temp_node structure
+ *Data *createNode(); - declaration
+ *This function will allocate a memory for Data structure
  *Will set the pointer to next inside newly created node to NULL.
  *In case of success will return a pointer to newly created node;
  *In case of error will allert and exit with code (-1).
  */
-s_temp_node *createNode()
+Data *createNode()
 {
-        s_temp_node *pNew = NULL;
-        if (!(pNew = (s_temp_node *)malloc(sizeof(s_temp_node)))) {
+        Data *pNew = NULL;
+        if (!(pNew = (Data *)malloc(sizeof(Data)))) {
                 perror("Muistinvaraus epäonnistui");
                 exit(-1);
         }
@@ -74,7 +74,7 @@ s_temp_node *createNode()
  *This function will initialize the given node with values
  *recieved from parsing the string, that was read from file.
  */
-void initNode(char *string, s_temp_node *pCur)
+void initNode(char *string, Data *pCur)
 {
         pCur->year = atoi(strtok(string, ";"));
         pCur->month = atoi(strtok(NULL, ";"));
@@ -85,7 +85,7 @@ void initNode(char *string, s_temp_node *pCur)
 /******************************************************************************/
 
 /**
- *void linkNodes(s_temp_node *, s_temp_node *); - declaration.
+ *void linkNodes(Data *, Data *); - declaration.
  *This function will link two nodes
  *Will recieve as a parameters two pointers.
  *First pointer to the previous node
@@ -96,7 +96,7 @@ void initNode(char *string, s_temp_node *pCur)
  *!!!except the first position!!!.
  *
  */
-void linkNodes(s_temp_node *pPrev, s_temp_node *pNew)
+void linkNodes(Data *pPrev, Data *pNew)
 {
         if (pPrev->pNext == NULL) {
                 pPrev->pNext = pNew;
@@ -113,7 +113,7 @@ void linkNodes(s_temp_node *pPrev, s_temp_node *pNew)
                  *Useful in case when we need this variable just inside
                  *this block.
                  */
-                s_temp_node *tmp = NULL;
+                Data *tmp = NULL;
                 tmp = pPrev->pNext;
                 pPrev->pNext = pNew;
                 pNew->pNext = tmp;
@@ -121,12 +121,12 @@ void linkNodes(s_temp_node *pPrev, s_temp_node *pNew)
 }
 /******************************************************************************/
 /**
- *s_temp_node *vapaa(s_temp_node *); - declaration
+ *Data *vapaa(Data *); - declaration
  *This function clears the linked list.
  *Recieves a pointer to first node as a parameter
  */
-void vapaa(s_temp_node *pStart) {
-        s_temp_node *ptr = NULL;
+void vapaa(Data *pStart) {
+        Data *ptr = NULL;
         while (pStart) {
                 ptr = pStart->pNext;
                 free(pStart);

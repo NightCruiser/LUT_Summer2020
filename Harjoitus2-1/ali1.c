@@ -16,7 +16,7 @@
 #include "ali2.h"
 /******************************************************************************/
 /**
- *s_temp_node *fileToList(const char *); - declaration
+ *Data *fileToList(const char *); - declaration
  *This function will read needed values from file
  *and save it to linked list nodes.
  *Will recieve as a parameter the name of the file
@@ -24,11 +24,11 @@
  *outside of program's folder.
  *Will return a pointer to the first node of newly created linked list.
  */
-s_temp_node *fileToList(const char *name, s_temp_node *pStart)
+Data *fileToList(const char *name, Data *pStart)
 {
-        //s_temp_node *pStart = NULL;
-        s_temp_node *pCur = NULL;
-        //s_temp_node *pPrev = NULL;
+        //Data *pStart = NULL;
+        Data *pCur = NULL;
+        //Data *pPrev = NULL;
         int rivi = 0;
         char buffer[LEN];
         FILE *pFile = NULL;
@@ -44,26 +44,26 @@ s_temp_node *fileToList(const char *name, s_temp_node *pStart)
         /*This loop reads the file string by string,
          *parse the string and creates/inits the linked list
          */
-        pStart = (s_temp_node *)newNode(sizeof(s_temp_node));
+        pStart = (Data *)newNode(sizeof(Data));
         pCur = pStart;
         fgets(buffer, LEN, pFile);
         initNode(buffer, pStart);
         rivi++;
         while ((fgets(buffer, LEN, pFile)) != NULL) {
                 /*if (pStart == NULL) {
-                        pStart = (s_temp_node *)newNode(sizeof(s_temp_node));
+                        pStart = (Data *)newNode(sizeof(Data));
                         pCur = pPrev = pStart;
                         initNode(buffer, pStart);
                         rivi ++;
                 } else {
 
-                        pCur = (s_temp_node *)newNode(sizeof(s_temp_node));
+                        pCur = (Data *)newNode(sizeof(Data));
                         initNode(buffer, pCur);
                         linkNodes(pPrev, pCur);
                         pPrev = pCur;
                         rivi ++;
                 }*/
-                pCur->pNext = (s_temp_node *)newNode(sizeof(s_temp_node));
+                pCur->pNext = (Data *)newNode(sizeof(Data));
                 pCur = pCur->pNext;
                 initNode(buffer, pCur);
                 rivi++;
@@ -74,13 +74,13 @@ s_temp_node *fileToList(const char *name, s_temp_node *pStart)
 }
 /******************************************************************************/
 /**
- *void listToFile(s_temp_node *); - declaration
+ *void listToFile(Data *); - declaration
  *This function reads data from the linked list
  *and saves this data to the file tulostiedot.txt, that function creates
  *if it doesn't exist.
  *In case when file exist it will be overwritten.
  */
-void listToFile(s_temp_node *pStart)
+void listToFile(Data *pStart)
 {
         FILE *pFile = NULL;
         if (!(pFile = fopen("tulostiedot.txt", "wt"))) {

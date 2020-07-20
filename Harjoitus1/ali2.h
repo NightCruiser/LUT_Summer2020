@@ -10,12 +10,12 @@
 #ifndef ALI2_H
 #define ALI2_H
 
-void analyse(s_temp_node *);
+void analyse(Data *);
 void clearStdin();
-s_temp_node *createNode();
-void initNode(char *, s_temp_node *);
-void linkNodes(s_temp_node *, s_temp_node *);
-void vapaa(s_temp_node *);
+Data *createNode();
+void initNode(char *, Data *);
+void linkNodes(Data *, Data *);
+void vapaa(Data *);
 #endif /*ALI2_H*/
 
 /******************************************************************************/

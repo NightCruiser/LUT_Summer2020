@@ -15,7 +15,7 @@
 #include "ali2.h"
 /******************************************************************************/
 /**
- *s_temp_node *fileToList(const char *name, s_temp_node *pStart); - declaration
+ *Data *fileToList(const char *name, Data *pStart); - declaration
  *This function will read needed values from file
  *and save it to linked list nodes.
  *Will recieve as a parameter the name of the file and a pointer to Start.
@@ -23,9 +23,9 @@
  *outside of program's folder(for Windows users: use \\ instead of \).
  *Will return a pointer to the first node of newly created linked list.
  */
-s_temp_node *fileToList(const char *name, s_temp_node *pStart)
+Data *fileToList(const char *name, Data *pStart)
 {
-        s_temp_node *pCur = NULL;
+        Data *pCur = NULL;
         int rivi = 0;
         char buffer[LEN];
         FILE *pFile = NULL;
@@ -39,7 +39,7 @@ s_temp_node *fileToList(const char *name, s_temp_node *pStart)
         printf("Luetaan tiedosto '%s'\n", name);
         fgets(buffer, LEN, pFile); /*we don't need the first string*/
 
-        pStart = (s_temp_node *)newNode(sizeof(s_temp_node));
+        pStart = (Data *)newNode(sizeof(Data));
         pCur = pStart;
         fgets(buffer, LEN, pFile);
         initNode(buffer, pStart);
@@ -48,7 +48,7 @@ s_temp_node *fileToList(const char *name, s_temp_node *pStart)
         *parse the string and creates/inits the linked list
         */
         while ((fgets(buffer, LEN, pFile)) != NULL) {
-                pCur->pNext = (s_temp_node *)newNode(sizeof(s_temp_node));
+                pCur->pNext = (Data *)newNode(sizeof(Data));
                 pCur = pCur->pNext;
                 initNode(buffer, pCur);
                 rivi++;
@@ -59,13 +59,13 @@ s_temp_node *fileToList(const char *name, s_temp_node *pStart)
 }
 /******************************************************************************/
 /**
- *void listToFile(s_temp_node *); - declaration
+ *void listToFile(Data *); - declaration
  *This function reads data from the linked list
  *and saves this data to the file tulostiedot.txt, that function creates
  *if it doesn't exist.
  *In case when file exist it will be overwritten.
  */
-void listToFile(s_temp_node *pStart)
+void listToFile(Data *pStart)
 {
         FILE *pFile = NULL;
         if (!(pFile = fopen("tulostiedot.txt", "wt"))) {
@@ -82,9 +82,21 @@ void listToFile(s_temp_node *pStart)
         printf("Lämpötiladata tallennettu.\n\n");
 }
 /******************************************************************************/
-void monthToFile(MAnalyse_t *pStart)
+/**
+ *void monthToFile(Month *); - declaration.
+ *This function will create new or rewrite existing tulostiedot.csv file
+ *inside the program's folder.
+ *Newly created .csv file will be filled by data from MonthAnalyse linked list
+ *in special format given by task.
+ **Example output:
+ *;Tammi;Helmi;Maalis;Huhti;Touko;Kesa;Heina;Elo;Syys;Loka;Marras;Joulu
+ *Lappeenranta - 2018;-4;-10;-6;4;14;14;20;17;12;5;1;-4
+ *Hanko - 2018;0;-5;-3;3;12;13;20;18;14;8;5;0
+ *Will recieve a pointer to a first node of MonthAnalyse list as a parameter.
+ */
+void monthToFile(Month *pStart)
 {
-        s_tulokset *pTul = NULL;
+        Tulokset *pTul = NULL; /*variable to maintain a pointer to Tulokset*/
         FILE *pCsv = NULL;
         int valinta = 0;
 
@@ -94,26 +106,34 @@ void monthToFile(MAnalyse_t *pStart)
         "3) Maksimilämpötila\n"
         "Valintasi: ");
         scanf(" %d", &valinta);
+        clearStdin();
+        /*Checking the user's input*/
         if (valinta < 1 || valinta > 3 ) {
                 printf("Tuntematon valinta, yritä uudestaan.\n");
                 return;
         }
+        /*Attempting to create a new file or overwrite the old one*/
         if (!(pCsv = fopen("tulostiedot.csv", "wt"))) {
                 perror("Tiedostoon kirjoittaminen epäonnistui");
                 return;
         }
-        pTul = pStart->pTulokset;
+        pTul = pStart->pTulokset; /*initialising the pointer to Tulokset list*/
+        /*This small loop will just write in the file the first string with
+         months.*/
         while (pTul) {
                 fprintf(pCsv, ";%s",pTul->month);
                 pTul = pTul->pNext;
         }
-        fprintf(pCsv, "\n");
-        pTul = NULL;
-        clearStdin();
+        fprintf(pCsv, "\n");/*new line*/
+        /*The main loop. Will write in file all the needed data from
+          MonthAnalyse linked list*/
         while(pStart) {
-                pTul = pStart->pTulokset;
+                pTul = pStart->pTulokset;/*re-init pointer to Tulokset*/
                 fprintf(pCsv, "%s - %d",
-                pStart->paikka, pStart->year);
+                pStart->paikka, pStart->year);/*writing a place and a year*/
+                /*This subloop will write data about temperature
+                 depending on user's choise. It can be Average,
+                 Minumum of Maximum*/
                 while(pTul) {
                         if (valinta == 1) {
                                 fprintf(pCsv, ";%d", pTul->avgTemp );
@@ -121,14 +141,13 @@ void monthToFile(MAnalyse_t *pStart)
                                 fprintf(pCsv, ";%d", pTul->minTemp );
                         } else if (valinta == 3) {
                                 fprintf(pCsv, ";%d", pTul->maxTemp );
-                        } else {
-                                printf("Tuntematon valinta, yritä uudestaan.\n");
                         }
                         pTul = pTul->pNext;
                 }
 
-                fprintf(pCsv, "\n");
-                pStart = pStart->pNext;
+                fprintf(pCsv, "\n");/*newline at the end*/
+                pStart = pStart->pNext; /*initialising the MonthAnalyse pointer
+                                          with pointer to next Month node*/
         }
         printf("Tiedot tallennettu tiedostoon: 'tulostiedot.csv'\n");
         fclose(pCsv);

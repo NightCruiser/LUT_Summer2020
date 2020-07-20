@@ -10,15 +10,15 @@
 #ifndef ALI2_H
 #define ALI2_H
 
-void analyse(s_temp_node *);
+void analyse(Data *);
 void clearStdin();
-s_tulokset *createMonthNode();
-void createMonthList(char *, s_temp_node *);
-void parseMonthData(s_temp_node **, s_tulokset **, int, char *);
-s_temp_node *createNode();
-void initNode(char *, s_temp_node *);
-void linkNodes(s_temp_node *, s_temp_node *);
-void vapaa(s_temp_node *);
+Tulokset *createMonthNode();
+void createMonthList(char *, Data *);
+void parseMonthData(Data **, Tulokset **, int, char *);
+Data *createNode();
+void initNode(char *, Data *);
+void linkNodes(Data *, Data *);
+void vapaa(Data *);
 #endif /*ALI2_H*/
 
 /******************************************************************************/

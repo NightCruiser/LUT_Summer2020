@@ -19,8 +19,8 @@ void getFileName(char **);
 
 int main(int argc, char *argv[])
 {
-        s_temp_node *pStart = NULL;
-        MAnalyse_t *pMonth = NULL;
+        Data *pStart = NULL;
+        Month *pMonth = NULL;
         int valinta = 0;
         char *fName = NULL; /*Array will contain the filename or struct name*/
         printf("Tämä ohjelma analysoi lämpötilatiedostoja.\n\n");
@@ -39,66 +39,72 @@ int main(int argc, char *argv[])
                 scanf(" %d", &valinta);
                 clearStdin(); /*will clear stdin*/
                 switch (valinta) {
-                        case 1 : /*Lue lämpötilatiedosto*/
-                                if (pStart) {
-                                        vapaa(pStart);
-                                        pStart = NULL;
-                                }
-                                printf("Anna luettavan tiedoston nimi: ");
-                                if (fName) free(fName);
-                                getFileName(&fName);
-                                pStart = fileToList(fName, pStart);
-                                break;
-                        case 2 : /*Tallenna listan tiedot*/
-                                if (pStart) {
-                                        listToFile(pStart);
-                                } else {
-                                        printf("Lämpötilalista on tyhjä.\n\n");
-                                }
-                                break;
-                        case 3 : /*Analysoi tiedot*/
-                                if (pStart) {
-                                        analyse(pStart);
-                                } else {
-                                        printf("Ei analysoitavaa, lue ensin "
-                                               "lämpötilatiedosto.\n\n");
-                                }
-                                break;
-                        case 4 : /*Suorita kuukausianalyysi*/
-                                if(pStart) {
-                                        printf("Anna analysoitavalle "
-                                               "datasetille nimi: ");
-                                        free(fName);
-                                        getFileName(&fName);
-                                        pMonth = createMonthList(pMonth, fName, pStart);
-                                } else {
-                                        printf("Ei analysoitavaa, lue ensin "
-                                               "lämpötilatiedosto.\n\n");
-                                }
-                                break;
-                        case 5 : /*Tulosta kaikki tulokset*/
-                                if (pMonth != NULL) {
-                                        printTulokset(pMonth, stdout);
-                                }
-                                break;
-                        case 6 : /*Tallenna tulokset tiedostoon*/
-                                monthToFile(pMonth);
-                                break;
-                        case 7 : /*Tyhjennä analyysilista*/
-                                if (pStart) pStart = vapaa(pStart);
-                                if (pMonth) vapaaMonth(pMonth);
+                case 1 : /*Lue lämpötilatiedosto*/
+                        if (pStart) {
+                                vapaa(pStart);
                                 pStart = NULL;
-                                pMonth = NULL;
-                                break;
-                        case 0 : /*Lopeta*/
+                        }
+                        printf("Anna luettavan tiedoston nimi: ");
+                        if (fName) free(fName);
+                        getFileName(&fName);
+                        pStart = fileToList(fName, pStart);
+                        break;
+                case 2 : /*Tallenna listan tiedot*/
+                        if (pStart) {
+                                listToFile(pStart);
+                        } else {
+                                printf("Lämpötilalista on tyhjä.\n\n");
+                        }
+                        break;
+                case 3 : /*Analysoi tiedot*/
+                        if (pStart) {
+                                analyse(pStart);
+                        } else {
+                                printf("Ei analysoitavaa, lue ensin "
+                                       "lämpötilatiedosto.\n\n");
+                        }
+                        break;
+                case 4 : /*Suorita kuukausianalyysi*/
+                        if(pStart) {
+                                printf("Anna analysoitavalle "
+                                       "datasetille nimi: ");
                                 free(fName);
-                                if (pStart) pStart = vapaa(pStart);
-                                if (pMonth) vapaaMonth(pMonth);
-                                printf("Kiitos ohjelman käytöstä.\n");
-                                break;
-                        default:
-                                printf("Tuntematon valinta, "
-                                       "yritä uudestaan.\n");
+                                getFileName(&fName);
+                                pMonth = createMonthList(pMonth, fName, pStart);
+                        } else {
+                                printf("Ei analysoitavaa, lue ensin "
+                                       "lämpötilatiedosto.\n\n");
+                        }
+                        break;
+                case 5 : /*Tulosta kaikki tulokset*/
+                        if (pMonth != NULL) {
+                                printTulokset(pMonth, stdout);
+                        } else {
+                                printf("Tuloslista on tyhjä.\n");
+                        }
+                        break;
+                case 6 : /*Tallenna tulokset tiedostoon*/
+                        if (pMonth != NULL) {
+                                monthToFile(pMonth);
+                        } else {
+                                printf("Tuloslista on tyhjä.\n");
+                        }
+                        break;
+                case 7 : /*Tyhjennä analyysilista*/
+                        if (pStart) pStart = vapaa(pStart);
+                        if (pMonth) vapaaMonth(pMonth);
+                        pStart = NULL;
+                        pMonth = NULL;
+                        break;
+                case 0 : /*Lopeta*/
+                        free(fName);
+                        if (pStart) pStart = vapaa(pStart);
+                        if (pMonth) vapaaMonth(pMonth);
+                        printf("Kiitos ohjelman käytöstä.\n");
+                        break;
+                default:
+                        printf("Tuntematon valinta, "
+                               "yritä uudestaan.\n");
                 }
         } while (valinta != 0);
         return (0);

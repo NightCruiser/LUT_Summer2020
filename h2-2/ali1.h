@@ -43,11 +43,11 @@ struct monthAnalyse {
         unsigned year : 12;/*unsigned 4096 values*/
 };
 
-typedef struct tulostiedot s_tulokset;
-typedef struct lampotila s_temp_node;
+typedef struct tulostiedot Tulokset;
+typedef struct lampotila Data;
 
-s_temp_node *fileToList(const char *);
-void listToFile(s_temp_node *);
+Data *fileToList(const char *);
+void listToFile(Data *);
 
 #endif /*ALI1_H*/
 /******************************************************************************/

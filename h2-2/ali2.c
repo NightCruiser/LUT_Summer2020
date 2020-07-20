@@ -16,12 +16,12 @@
 #include "ali2.h"
 /******************************************************************************/
 /**
- *void analyse(s_temp_node *); - declaration
+ *void analyse(Data *); - declaration
  *This function analyses the temperature data from previously generated
  *linked list, prints out Average, Minimum and Maximum values
  *Recieves the pointer to the first list's node as a parameter.
  */
-void analyse(s_temp_node *pStart)
+void analyse(Data *pStart)
 {
         int alkiot = 0;
         int min = 0;
@@ -54,16 +54,16 @@ void clearStdin()
 
 /******************************************************************************/
 /**
- *s_temp_node *createNode(); - declaration
- *This function will allocate a memory for s_temp_node structure
+ *Data *createNode(); - declaration
+ *This function will allocate a memory for Data structure
  *Will set the pointer to next inside newly created node to NULL.
  *In case of success will return a pointer to newly created node;
  *In case of error will allert and exit with code (-1).
  */
-s_temp_node *createNode()
+Data *createNode()
 {
-        s_temp_node *pNew = NULL;
-        if (!(pNew = (s_temp_node *)malloc(sizeof(s_temp_node)))) {
+        Data *pNew = NULL;
+        if (!(pNew = (Data *)malloc(sizeof(Data)))) {
                 perror("Muistinvaraus epäonnistui");
                 exit(-1);
         }
@@ -75,7 +75,7 @@ s_temp_node *createNode()
  *This function will initialize the given node with values
  *recieved from parsing the string, that was read from file.
  */
-void initNode(char *string, s_temp_node *pCur)
+void initNode(char *string, Data *pCur)
 {
         pCur->year = atoi(strtok(string, ";"));
         pCur->month = atoi(strtok(NULL, ";"));
@@ -85,16 +85,16 @@ void initNode(char *string, s_temp_node *pCur)
 }
 /******************************************************************************/
 /**
- *s_tulokset *createMonthNode(); - declaration
- *This function will allocate a memory for s_tulokset structure
+ *Tulokset *createMonthNode(); - declaration
+ *This function will allocate a memory for Tulokset structure
  *Will set the pointer to next inside newly created node to NULL.
  *In case of success will return a pointer to newly created node;
  *In case of error will allert and exit with code (-1).
  */
-/*s_tulokset *createMonthNode()
+/*Tulokset *createMonthNode()
 {
-        s_tulokset *pNew = NULL;
-        if (!(pNew = (s_tulokset *)malloc(sizeof(s_tulokset)))) {
+        Tulokset *pNew = NULL;
+        if (!(pNew = (Tulokset *)malloc(sizeof(Tulokset)))) {
                 perror("Muistinvaraus epäonnistui");
                 exit(-1);
         }
@@ -138,7 +138,7 @@ void *newNode(size_t size)
 
 /******************************************************************************/
 /**
- *void linkNodes(s_temp_node *, s_temp_node *); - declaration.
+ *void linkNodes(Data *, Data *); - declaration.
  *This function will link two nodes
  *Will recieve as a parameters two pointers.
  *First pointer to the previous node
@@ -186,8 +186,8 @@ void linkNodes(void *pPrev, void *pNew)
                 pStart = ptr;
         }
 }*/
-void *vapaa(s_temp_node *pStart) {
-        s_temp_node *ptr = NULL;
+void *vapaa(Data *pStart) {
+        Data *ptr = NULL;
         while (pStart) {
                 printf("free called");
                 ptr = pStart->pNext;
@@ -197,21 +197,21 @@ void *vapaa(s_temp_node *pStart) {
         return pStart;
 }
 /******************************************************************************/
-void createMonthList(char *fName, s_temp_node *pData)
+void createMonthList(char *fName, Data *pData)
 {
-        s_tulokset *pStart = NULL;
-        s_tulokset *pCur = NULL;
-        s_tulokset *pPrev = NULL;
+        Tulokset *pStart = NULL;
+        Tulokset *pCur = NULL;
+        Tulokset *pPrev = NULL;
         int i = 0;
         while (i < MONTHS){
                 if (pStart == NULL) {
-                        pCur = pPrev = pStart = (s_tulokset *)newNode
-                        (sizeof(s_tulokset));
+                        pCur = pPrev = pStart = (Tulokset *)newNode
+                        (sizeof(Tulokset));
                         printf("BeforeParsing Month %s\n", pStart->month);
                         parseMonthData(&pData, &pStart, i, fName);
                         i++;
                 } else {
-                        pCur = (s_tulokset *)newNode(sizeof(s_tulokset));
+                        pCur = (Tulokset *)newNode(sizeof(Tulokset));
                         parseMonthData(&pData, &pCur, i, fName);
                         pPrev->pNext = pCur;
                         pPrev = pCur;
@@ -221,7 +221,7 @@ void createMonthList(char *fName, s_temp_node *pData)
         printf("Kuukausianalyysi valmis.\n");
 }
 /******************************************************************************/
-void parseMonthData(s_temp_node **pData, s_tulokset **pNode, int month,
+void parseMonthData(Data **pData, Tulokset **pNode, int month,
         char *fName)
         {
                 int tmpSumma = 0;

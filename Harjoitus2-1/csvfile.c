@@ -1,6 +1,6 @@
-void monthToFile(MAnalyse_t *pStart)
+void monthToFile(Month *pStart)
 {
-        s_tulokset *pTul = NULL;
+        Tulokset *pTul = NULL;
         FILE *pCsv = NULL;
         int valinta = 0;
 
@@ -50,9 +50,9 @@ void monthToFile(MAnalyse_t *pStart)
         fclose(pCsv);
 }
 /******************************************************************************/
-void monthToFile(MAnalyse_t *pStart)
+void monthToFile(Month *pStart)
 {
-        s_tulokset *pTul = NULL;
+        Tulokset *pTul = NULL;
         FILE *pCsv = NULL;
         int valinta = 0;
         /*Will check if file already exists. If not will create and
@@ -130,9 +130,9 @@ void monthToFile(MAnalyse_t *pStart)
         fclose(pCsv);
 }
 /******************************************************************************/
-void printTulokset(MAnalyse_t *pStart, FILE *stream)
+void printTulokset(Month *pStart, FILE *stream)
 {
-        s_tulokset *pCur = NULL;
+        Tulokset *pCur = NULL;
         while (pStart != NULL) {
                 pCur = pStart->pTulokset;
                 fprintf(stream, "%s\n%d\t", pStart->paikka, pStart->year);
