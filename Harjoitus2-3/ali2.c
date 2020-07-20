@@ -54,9 +54,9 @@ void clearStdin()
 /******************************************************************************/
 /**
  *This function will initialize the given node with values
- *recieved from parsing the string, that was read from file.
+ *recieved by parsing the string, that was read from file.
  */
-void initNode(char *string, s_temp_node *pCur)
+void initNode(const char *string, s_temp_node *pCur)
 {
         pCur->year = (unsigned)atoi(strtok(string, ";"));
         pCur->month = (unsigned)atoi(strtok(NULL, ";"));
@@ -69,6 +69,10 @@ void initNode(char *string, s_temp_node *pCur)
  *void *newNode(size_t size); - declaration
  *This function will allocate a memory for s_tulokset structure
  *Will set the pointer to next inside newly created node to NULL.
+ *!!!FUNCTION USES VOID POINTERS!!!
+ *!!!DO NOT USE IF YOU ARE NOT SURE ABOUT STRUCTURE REALISATION!!!
+ *In All of our structures the first bytes are pointers to Next.
+ *So this universal function is usable.
  *In case of success will return a pointer to newly created node;
  *In case of error will allert and exit with code (-1).
  */
@@ -80,16 +84,41 @@ void *newNode(size_t size)
                 exit(-1);
         }
         memset(pNew, 0, size);
-        *(void **)pNew = NULL;
+        *(void **)pNew = NULL;/*!!!CHECK STRUCTURE REALISATION!!!*/
         return pNew;
 }
 /******************************************************************************/
 /**
+*!!!usable ONLY for structures where the FIRST Bytes are Pointer to Next.!!!
+ *void *vapaa(void *); = declaration
+ *this "Void pointer" realisation is more universal.
+ *Usable because "free" function knows an amount of memory that
+ *previously was allocated by malloc.
+ *This function clears the linked list.
+ *Recieves a pointer to first node as a parameter
+ *Will return a NULL pointer;
+*/
+void *vapaa(void *pStart)
+{
+        void *ptr = NULL;
+        while(pStart) {
+                ptr = *(void **)pStart;/*DO NOT use it if you are not sure
+                                         about how strustures are realised*/
+                free(pStart);
+                pStart = ptr;
+        }
+        return pStart;
+}
+/**
  *void *vapaa(void *); - declaration
  *This function clears the linked list.
  *Recieves a pointer to first node as a parameter
+ *Will return a NULL pointer;
  */
-void *vapaa(s_temp_node *pStart) {
+
+/*
+void *vapaa(s_temp_node *pStart)
+{
         s_temp_node *ptr = NULL;
         while (pStart) {
                 ptr = pStart->pNext;
@@ -98,7 +127,34 @@ void *vapaa(s_temp_node *pStart) {
         }
         return pStart;
 }
-void vapaaMonth(MAnalyse_t *pStart)
+*/
+/******************************************************************************/
+/**
+ *void vapaaMonth(void *); -declaration
+ *!!!FUNCTION USES VOID POINTERS!!!
+ *!!!DO NOT USE IF YOU ARE NOT SURE ABOUT STRUCTURE REALISATION!!!
+ *This is improved void *vapaa(void *) function for 2-dimensional lists.
+ *Example : in our case each node of linked list contains another linked list.
+ *!!!IN ALL STRUCTURES FIRST BYTES MUST BE A POINTER TO NEXT!!!
+ */
+void vapaaMonth(void *pStart)
+{
+        void *ptr1 = NULL;
+        while(pStart) {
+                ptr1 = *(void **)pStart;
+                vapaa(*(void **)pStart);
+                free(pStart);
+                pStart = ptr1;
+        }
+}
+/**
+ *void vapaaMonth(MAnalyse_t *); - declaration
+ *This function clears the MonthAnalyse linked list inside of which
+ *there is another linked lists of Tulostiedot.
+ *All of them will be cleared.
+ *Recieves a pointer to the first node of MonthAnalyse list as a parameter
+ */
+/*void vapaaMonth(MAnalyse_t *pStart)
 {
         MAnalyse_t *ptr1 = NULL;
         while(pStart) {
@@ -113,6 +169,7 @@ void vapaaMonth(MAnalyse_t *pStart)
                 pStart = ptr1;
         }
 }
+*/
 /******************************************************************************/
 /**
  *MAnalyse_t *createMonthList(MAnalyse_t *, const char *, s_temp_node *); - decl
@@ -188,7 +245,7 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, const char *fName,
                 /*this loop initialise the newly created node of Tulostiedot
                  list with data recieved from Data list. For every node
                  this loop will parse the data that related to month given
-                 by "i" variable. Added +1, because it was initioalised by 0.
+                 by "i" variable. Added +1, because it was initialised by 0.
                  The first condition checks the existing of next Data node,
                  again we have no guarantee that we have information about
                  all the months and the second condition will not let us
@@ -215,13 +272,24 @@ MAnalyse_t *createMonthList(MAnalyse_t *pMonth, const char *fName,
 }
 /******************************************************************************/
 /**
- *This function will print out
+ *void printTulokset(MAnalyse_t *, FILE *); - declaration
+ *This function will print out to the given stream the data from MonthsAnalyse
+ *linked list. Every node of this structure cantains a pointer to the first
+ *element of Tulostiedot linked list that also will be printed for each node.
+ *The output will be in format given in task.
+ *I have added the posibility of changing of output stream. It can be a file.
+ *Recieves a pointer to the first element of MonthAnalyse list and a pointer to
+ *a stream.
  */
 void printTulokset(MAnalyse_t *pStart, FILE *stream)
 {
-        int i = 0;
-        s_tulokset *pCur = NULL;
-        char printArr[3][4] = {"avg", "min", "max"};
+        int i = 0; /*counter needed by the for-loop*/
+        s_tulokset *pCur = NULL; /*variable needed to maintain the pointer
+                                  to Tulostiedot structure*/
+        char printArr[3][4] = {"avg", "min", "max"};/*an array of strings needed
+                                                      for ease the loop*/
+        /*This main loop will print out the needed data from MonthsAnalyse
+         structure and the string with month's names from Tulostiedot*/
         while (pStart != NULL) {
                 pCur = pStart->pTulokset;
                 fprintf(stream, "%s\n%d\t", pStart->paikka, pStart->year);
@@ -230,7 +298,12 @@ void printTulokset(MAnalyse_t *pStart, FILE *stream)
                         pCur = pCur->pNext;
                 }
                 fprintf(stream, "\n");
-                pCur = pStart->pTulokset;
+                pCur = pStart->pTulokset; /*return the pointer to the 1st node*/
+                /*this loop needed to print out Minimum, Maximum and average
+                 temperature strings. All the difference between this strings
+                 from code perspective is a variable name and the name of
+                 the string. We will take the name from an array and print
+                 three different variables depending on "i" counter*/
                 for (i = 0; i < 3; i++) {
                         fprintf(stream, "%s:\t", printArr[i]);
                         while(pCur !=NULL) {
@@ -246,7 +319,7 @@ void printTulokset(MAnalyse_t *pStart, FILE *stream)
                                 pCur = pCur->pNext;
                         }
                         fprintf(stream, "\n");
-                        pCur = pStart->pTulokset;
+                        pCur = pStart->pTulokset;/*return to the fist node*/
                 }
                 fprintf(stream, "\n\n");
                 pStart = pStart->pNext;
