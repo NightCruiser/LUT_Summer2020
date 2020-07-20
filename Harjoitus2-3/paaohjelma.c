@@ -108,12 +108,13 @@ int main(int argc, char *argv[])
  */
 void getFileName(char **fName)
 {
-        size_t len = 0;
+        int len = 0;
         char buffer[BUFFER_SIZE] = {0};
         do {
                 fgets(buffer, BUFFER_SIZE, stdin);
-                if ((len = strlen(buffer)) < 1) {
-                        printf("Nimi on tyhjä, yritä uudestaan");
+                len = strlen(buffer) - 1;
+                if (len < 1) {
+                        printf("Nimi on tyhjä, yritä uudestaan.\n>> ");
                 }
         } while (len < 1);
         if (!(*fName = (char *)malloc(len))) { /*will not add 1 byte for'\0'*/
