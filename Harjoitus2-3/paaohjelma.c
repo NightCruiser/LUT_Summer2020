@@ -17,7 +17,7 @@
 #include "ali1.h"
 #include "ali2.h"
 
-void getFileName(char **);
+void getName(char **);
 
 int main(int argc, char *argv[])
 {
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
                         }
                         printf("Anna luettavan tiedoston nimi: ");
                         if (fName) free(fName);
-                        getFileName(&fName);
+                        getName(&fName);
                         pStart = fileToList(fName, pStart);
                         break;
                 case 2 : /*Tallenna listan tiedot*/
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
                                 printf("Anna analysoitavalle "
                                        "datasetille nimi: ");
                                 free(fName);
-                                getFileName(&fName);
+                                getName(&fName);
                                 pMonth = createMonthList(pMonth, fName, pStart);
                         } else {
                                 printf("Ei analysoitavaa, lue ensin "
@@ -99,9 +99,9 @@ int main(int argc, char *argv[])
                         pMonth = NULL;
                         break;
                 case 0 : /*Lopeta*/
-                        free(fName);
-                        if (pStart) pStart = vapaa(pStart);
-                        if (pMonth) vapaaMonth(pMonth);
+                        if (fName) free(fName); /*Frees filename's array*/
+                        if (pStart) pStart = vapaa(pStart); /*Data list clear*/
+                        if (pMonth) vapaaMonth(pMonth); /*MonthAnalyse*/
                         printf("Kiitos ohjelman käytöstä.\n");
                         break;
                 default:
@@ -119,18 +119,21 @@ int main(int argc, char *argv[])
  *Function will count the filename's length
  *and allocate the needed amount of memory to hold this name.
  */
-void getFileName(char **fName)
+void getName(char **fName)
 {
         int len = 0;
         char buffer[BUFFER_SIZE] = {0};
+        /*We will force the user to input something*/
         do {
                 fgets(buffer, BUFFER_SIZE, stdin);
-                len = (int)strlen(buffer);
+                len = ((int)strlen(buffer) - 1); /*avoiding SegFault. With no
+                                                  given value, '\n' will be
+                                                  recieved*/
                 if (len < 1) {
                         printf("Nimi on tyhjä, yritä uudestaan.\n>> ");
                 }
         } while (len < 1);
-        if (!(*fName = (char *)malloc(len))) {
+        if (!(*fName = (char *)malloc(len + 1))) { /*will return lost 1 byte*/
                 perror("Muistinvaraus epäonnistui");
                 exit (-1);
         }
