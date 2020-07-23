@@ -8,7 +8,7 @@
  */
 /******************************************************************************/
 /*This source file contains other functions*/
-/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteeista on
   Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #include <stdio.h>
@@ -74,18 +74,16 @@ void *newNode(size_t size)
  *previously was allocated by malloc.
  *This function clears the linked list.
  *Recieves a pointer to first node as a parameter
- *Will return a NULL pointer;
 */
-void *vapaa(void *pStart)
+void vapaa(void *pStart)
 {
         void *ptr = NULL;
         while(pStart) {
                 ptr = *(void **)pStart;/*DO NOT use it if you are not sure
-                                         about how strustures are realised*/
+                                         about how structures are realised*/
                 free(pStart);
                 pStart = ptr;
         }
-        return pStart;
 }
 /**
  *void *vapaa(void *); - declaration
@@ -175,7 +173,7 @@ Month *createMonthList(Month *pMonth, const char *fName,
         int i = 0; /*this variable will count the months*/
         /*Array of months. It will help to fulfill the list*/
         char kuukausi[MONTHS][7] = {"Tammi", "Helmi", "Maalis", "Huhti", "Touko"
-                                    ,"Kesa", "Heina", "Elo", "Syys", "Loka",
+                                    ,"Kesä", "Heinä", "Elo", "Syys", "Loka",
                                     "Marras", "Joulu"};
         /*if there is no previously created MonthAnalyse list,
          the new one will be created*/
@@ -252,8 +250,8 @@ Month *createMonthList(Month *pMonth, const char *fName,
                 strcpy(pTul->month, kuukausi[i]);/*will init the month's name*/
                 i++; /*month increment*/
         }
+        printf("Kuukausianalyysi valmis.\n\n");
         return pMonth;
-        printf("Kuukausianalyysi valmis.\n");
 }
 /******************************************************************************/
 /**
@@ -273,13 +271,14 @@ void printTulokset(Month *pStart, FILE *stream)
                                   to Tulostiedot structure*/
         char printArr[3][4] = {"avg", "min", "max"};/*an array of strings needed
                                                       for ease the loop*/
+        printf("Analyysilistan tulokset:\n\n");
         /*This main loop will print out the needed data from MonthsAnalyse
          structure and the string with month's names from Tulostiedot*/
         while (pStart != NULL) {
                 pCur = pStart->pTulokset;
-                fprintf(stream, "%s\n%d\t", pStart->paikka, pStart->year);
+                fprintf(stream, "%s\n%d", pStart->paikka, pStart->year);
                 while(pCur != NULL) {
-                        fprintf(stream, "%s\t", pCur->month);
+                        fprintf(stream, "\t%s", pCur->month);
                         pCur = pCur->pNext;
                 }
                 fprintf(stream, "\n");
@@ -290,23 +289,23 @@ void printTulokset(Month *pStart, FILE *stream)
                  the string. We will take the name from an array and print
                  three different variables depending on "i" counter*/
                 for (i = 0; i < 3; i++) {
-                        fprintf(stream, "%s:\t", printArr[i]);
+                        fprintf(stream, "%s:", printArr[i]);
                         while(pCur !=NULL) {
                                 if (i == 0) {
-                                        fprintf(stream, "%d\t", pCur->avgTemp);
+                                        fprintf(stream, "\t%d", pCur->avgTemp);
                                 }
                                 if (i == 1) {
-                                        fprintf(stream, "%d\t", pCur->minTemp);
+                                        fprintf(stream, "\t%d", pCur->minTemp);
                                 }
                                 if (i == 2) {
-                                        fprintf(stream, "%d\t", pCur->maxTemp);
+                                        fprintf(stream, "\t%d", pCur->maxTemp);
                                 }
                                 pCur = pCur->pNext;
                         }
                         fprintf(stream, "\n");
                         pCur = pStart->pTulokset;/*return to the fist node*/
                 }
-                fprintf(stream, "\n\n");
+                fprintf(stream, "\n");
                 pStart = pStart->pNext;
         }
 }

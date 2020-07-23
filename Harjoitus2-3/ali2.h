@@ -8,7 +8,7 @@
  */
 /******************************************************************************/
 /*Ali2 Header file.*/
-/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteeista on
   Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #ifndef ALI2_H
@@ -19,7 +19,7 @@ void *newNode(size_t size);
 Month *createMonthList(Month *, const char *, const Data *);
 void printTulokset(Month *, FILE *);
 void vapaaMonth(void *);
-void *vapaa(void *);
+void vapaa(void *);
 #endif /*ALI2_H*/
 
 /******************************************************************************/

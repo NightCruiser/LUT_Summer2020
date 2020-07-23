@@ -11,7 +11,6 @@
 /*Kommentoitu englanniksi, koska yksi kurssin tavoitteeista on
   Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
-/*Valgrinded*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,19 +28,6 @@ int main(int argc, char *argv[])
         return (0);
 }
 /******************************************************************************/
-/**
- *void callMenu() - declaration.
- *This function calls the menu of our program until we select "0".
- *I'm not sure about this move in our case, but it was in the task
- *"Pääohjelma  ja  valikonkäsittelyn  hoitava  aliohjelma  tulee  sijoittaa
- * paaohjelma.c -tiedostoon...".
- *Function will check the required conditions before the calling another
- *subroutines.
- *I tried to ease that menu with function that recieves as a parameter
- *an address to another function, but in our case it becomes harder to
- *understand.
- *Also thought about variadic functions but still not so easy. (must be learned)
- */
 void callMenu()
 {
         Data *pStart = NULL;
@@ -69,7 +55,6 @@ void callMenu()
                                 pStart = NULL;
                         }
                         printf("Anna luettavan tiedoston nimi: ");
-                        /*will free previously allocated memory for file name.*/
                         if (fName) free(fName);
                         getName(&fName);
                         pStart = fileToList(fName, pStart);
@@ -93,7 +78,6 @@ void callMenu()
                         if(pStart) {
                                 printf("Anna analysoitavalle "
                                        "datasetille nimi: ");
-                                /*fName 100% allocated*/
                                 free(fName);
                                 getName(&fName);
                                 pMonth = createMonthList(pMonth, fName, pStart);
@@ -103,29 +87,29 @@ void callMenu()
                         }
                         break;
                 case 5 : /*Tulosta kaikki tulokset*/
-                        if (pMonth) {
+                        if (pMonth != NULL) {
                                 printTulokset(pMonth, stdout);
                         } else {
                                 printf("Tuloslista on tyhjä.\n");
                         }
                         break;
                 case 6 : /*Tallenna tulokset tiedostoon*/
-                        if (pMonth) {
+                        if (pMonth != NULL) {
                                 monthToFile(pMonth);
                         } else {
                                 printf("Tuloslista on tyhjä.\n");
                         }
                         break;
                 case 7 : /*Tyhjennä analyysilista*/
-                        if (pStart) vapaa(pStart);
+                        if (pStart) pStart = vapaa(pStart);
                         if (pMonth) vapaaMonth(pMonth);
-                        pStart = NULL; /*Null the pointers to avoid*/
-                        pMonth = NULL; /*double free*/
+                        pStart = NULL;
+                        pMonth = NULL;
                         printf("Tuloslista tyhjennetty.\n\n");
                         break;
                 case 0 : /*Lopeta*/
                         if (fName) free(fName); /*Frees filename's array*/
-                        if (pStart) vapaa(pStart); /*Data list clear*/
+                        if (pStart) pStart = vapaa(pStart); /*Data list clear*/
                         if (pMonth) vapaaMonth(pMonth); /*MonthAnalyse*/
                         break;
                 default:
@@ -163,4 +147,8 @@ void getName(char **fName)
         strcpy(*fName, strtok(buffer, "\n")); /*will extract '\n' */
 }
 /******************************************************************************/
+_Bool checkAndCall(void function(void *ptr))
+{
+
+}
 /* eof */

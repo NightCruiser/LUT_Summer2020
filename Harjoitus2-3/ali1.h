@@ -8,7 +8,7 @@
  */
 /******************************************************************************/
 /*Ali1 Header file.*/
-/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteeista on
   Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #ifndef ALI1_H
@@ -27,7 +27,7 @@
  */
 struct Lampotila_t {
         struct Lampotila_t *pNext;
-        int temp      : 7;  /*Signed 128 values*/
+        int temp      : 7;  /*Signed 128 valuzes*/
         unsigned year : 12; /*unsigned 4096 values*/
         unsigned month: 4;  /*unsigned 15 values*/
         unsigned day  : 5;  /*unsigned 31 values*/
@@ -48,8 +48,8 @@ struct MonthAnalyse_t {
         unsigned year : 12;/*unsigned 4096 values*/
 };
 
-typedef struct Tulostiedot_t Tulokset;
 typedef struct Lampotila_t Data;
+typedef struct Tulostiedot_t Tulokset;
 typedef struct MonthAnalyse_t Month;
 
 Data *fileToList(const char *name, Data *);

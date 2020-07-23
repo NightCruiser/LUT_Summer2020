@@ -9,7 +9,7 @@
 /******************************************************************************/
 /*This Source file contains functions needed for work with files and some
   other functions to ease the work*/
-/*Kommentoitu englanniksi, koska yksi kurssin tavoitteesta on
+/*Kommentoitu englanniksi, koska yksi kurssin tavoitteeista on
   Hyvä ohjelmoinnin tyyli. Ohjelma pitäisi olla ymmärrettävä kaikille.*/
 /******************************************************************************/
 #include <stdio.h>
@@ -19,7 +19,7 @@
 #include "ali2.h"/*for NewNode need in both files*/
 /******************************************************************************/
 /**
- *Data *fileToList(const char *name, Data *pStart); - declaration
+ *Data *fileToList(const char *, Data *); - declaration
  *This function will read needed values from file
  *and save it to linked list nodes.
  *Will recieve as a parameter the name of the file and a pointer to Start.
@@ -30,7 +30,7 @@
 Data *fileToList(const char *name, Data *pStart)
 {
         Data *pCur = NULL;
-        int rivi = 0;
+        int rivi = 0; /*amount of rows*/
         char buffer[LEN];
         FILE *pFile = NULL;
         if (!(pFile = fopen(name, "rt"))) {
@@ -62,6 +62,7 @@ Data *fileToList(const char *name, Data *pStart)
 }
 /******************************************************************************/
 /**
+ *void initNode(char *, Data *); - declaration
  *This function will initialize the given node with values
  *recieved by parsing the string, that was read from file.
  */
@@ -84,7 +85,7 @@ void initNode(char *string, Data *pCur)
 void listToFile(Data *pStart)
 {
         FILE *pFile = NULL;
-        if (!(pFile = fopen("tulostiedot.txt", "wt"))) {
+        if (!(pFile = fopen("lampotiladata.txt", "wt"))) { /*tulostiedot.txt*/
                 perror("Tiedostoon kirjoittaminen epäonnistui" );
                 return;
         }
@@ -116,7 +117,7 @@ void monthToFile(Month *pStart)
         FILE *pCsv = NULL;
         int valinta = 0;
 
-        printf("Mikä kuukausianalyysi tallennetaan?\n"
+        printf("\nMikä kuukausianalyysi tallennetaan?\n"
         "1) Keskilämpötila\n"
         "2) Minimilämpötila\n"
         "3) Maksimilämpötila\n"
@@ -165,7 +166,7 @@ void monthToFile(Month *pStart)
                 pStart = pStart->pNext; /*initialising the MonthAnalyse pointer
                                           with pointer to next Month node*/
         }
-        printf("Tiedot tallennettu tiedostoon: 'tulostiedot.csv'\n");
+        printf("Tiedot tallennettu tiedostoon: 'tulostiedot.csv'\n\n");
         fclose(pCsv);
 }
 /******************************************************************************/
